@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Générateur de Signature Email</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      padding: 2rem;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+    #signature-preview {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+    .code-box {
+      background: #eee;
+      padding: 1rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Générateur de signature email</h2>
+    <form id="signature-form">
+      <input type="text" id="nom" placeholder="Nom Prénom" required>
+      <input type="text" id="poste" placeholder="Poste" required>
+      <input type="tel" id="tel" placeholder="Numéro de téléphone" required>
+      <input type="email" id="email" placeholder="Adresse email" required>
+      <button type="submit">Générer la signature</button>
+    </form>
+
+    <div id="signature-preview"></div>
+    <h3>Code HTML à copier :</h3>
+    <div class="code-box" id="signature-code"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('signature-form');
+    const preview = document.getElementById('signature-preview');
+    const codeBox = document.getElementById('signature-code');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nom = document.getElementById('nom').value;
+      const poste = document.getElementById('poste').value;
+      const tel = document.getElementById('tel').value;
+      const email = document.getElementById('email').value;
+
+      const signature = `
+        <table style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+          <tr>
+          <tr>
+    <img src="https://github.com/ManuelNavis/signaturemail/blob/main/Orange%20And%20White%20Minimalist%20Email%20Signature.png?raw=true" alt="Bandeau" style="width:100%; max-height:100px;">
+
+            <td style="padding-right: 15px;">
+              <img src="https://github.com/ManuelNavis/signaturemail/blob/main/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png?raw=true" width="80" alt="Logo">
+            </td>
+            <td>
+              <strong style="font-size: 16px;">${nom}</strong><br>
+              ${poste}<br>
+              📞 ${tel}<br>
+              ✉️ <a href="mailto:${email}">${email}</a><br>
+              🌐 <a href="http://www.villelamentin971.fr/">www.villelamentin971.fr</a>
+            </td>
+          </tr>
+        </table>
+      `;
+
+      preview.innerHTML = signature;
+      codeBox.textContent = signature;
+    });
+  </script>
+</body>
+</html>
