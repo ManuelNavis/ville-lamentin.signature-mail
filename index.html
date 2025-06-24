@@ -44,7 +44,9 @@
     <form id="signature-form">
       <input type="text" id="nom" placeholder="Prénom NOM" required>
       <input type="text" id="poste" placeholder="Poste" required>
+      <input type="text" id="service" placeholder="Service" required>
       <input type="tel" id="tel" placeholder="Numéro de téléphone/poste" required>
+      <input type="tel" id="tel" placeholder="poste">
       <input type="email" id="email" placeholder="Adresse email" required>
       <button type="submit">Générer la signature</button>
     </form>
@@ -83,6 +85,7 @@
         <td style="text-align: left;">
           <strong style="font-size: 16px;">${nom}</strong><br>
           ${poste}<br>
+          ${service}<br>
           📞 ${tel}<br>
           ✉️ <a href="mailto:${email}">${email}</a><br>
           🌐 <a href="https://www.ville-lamentin.fr">www.ville-lamentin.fr</a><br>
