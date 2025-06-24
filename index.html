@@ -89,7 +89,7 @@
         <td style="text-align: left;">
           <strong style="font-size: 20px;">${nom}</strong><br>
           <strong>${service}</strong> / ${emploi}<br>
-          ${poste ? `📞 ${poste}<br>` : ''} / ${tel ? `📞 ${tel}<br>` : ''}
+          ${poste && tel ? `📞${poste} / ${tel}<br>` : poste ? `📞${poste}<br>` : tel ? `📞 ${tel}<br>` : ''}
            ${phone ? `📱 ${phone}<br>` : ''}
           ✉️ <a href="mailto:${email}">${email}</a><br>
           🌐 <a href="https://www.ville-lamentin.fr">www.ville-lamentin.fr</a><br>
