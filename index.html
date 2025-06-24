@@ -43,10 +43,10 @@
     <h2>Générateur de signature email</h2>
     <form id="signature-form">
       <input type="text" id="nom" placeholder="Prénom NOM" required>
-      <input type="text" id="poste" placeholder="Poste" required>
+      <input type="text" id="emploi" placeholder="Emploi" required>
       <input type="text" id="service" placeholder="Service" required>
-      <input type="tel" id="tel" placeholder="Numéro de téléphone/poste" required>
-      <input type="tel" id="tel" placeholder="poste">
+      <input type="tel" id="tel" placeholder="Numéro de téléphone/poste">
+      <input type="tel" id="poste" placeholder="poste">
       <input type="email" id="email" placeholder="Adresse email" required>
       <button type="submit">Générer la signature</button>
     </form>
@@ -64,8 +64,10 @@
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const nom = document.getElementById('nom').value;
-      const poste = document.getElementById('poste').value;
+      const emploi = document.getElementById('emploi').value;
+      const service = document.getElementById('service').value;
       const tel = document.getElementById('tel').value;
+      const poste = document.getElementById('poste').value;
       const email = document.getElementById('email').value;
 
       const signature = `
@@ -84,9 +86,10 @@
         </td>
         <td style="text-align: left;">
           <strong style="font-size: 16px;">${nom}</strong><br>
-          ${poste}<br>
           ${service}<br>
+          ${emploi}<br>
           📞 ${tel}<br>
+          📞 ${poste}<br>
           ✉️ <a href="mailto:${email}">${email}</a><br>
           🌐 <a href="https://www.ville-lamentin.fr">www.ville-lamentin.fr</a><br>
           ⓕ <a href="https://fr-fr.facebook.com/villelamentin971">Ville Lamentin 971</a>   
