@@ -1,118 +1,256 @@
+
 <!DOCTYPE html>
 <html lang="fr">
-  <header style="text-align: center; padding: 10px;">
-  <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo" width="150">
-</header>
-
 <head>
-  <meta charset="UTF-8">
-  <title>Générateur de Signature Email</title>
-  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur de signature mail</title>
+
   <style>
+    :root {
+      --primary: #005b8f;
+      --secondary: #00a6a6;
+      --dark: #1f2933;
+      --light: #f4f7fb;
+      --white: #ffffff;
+      --text: #333333;
+      --border: #d9e2ec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
-      padding: 2rem;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
     }
-    .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
     }
-    input, button {
-      padding: 0.5rem;
-      font-size: 1rem;
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input {
       width: 100%;
-      margin: 0.5rem 0;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
     }
-    #signature-preview {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #fff;
-      border: 1px solid #ddd;
+
+    input:focus {
+      outline: none;
+      border-color: var(--secondary);
     }
-    .code-box {
-      background: #eee;
-      padding: 1rem;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-family: monospace;
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00476f;
+    }
+
+    .preview-box {
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      background: #ffffff;
+      overflow-x: auto;
+    }
+
+    .help {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef8f8;
+      border-left: 4px solid var(--secondary);
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 850px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h2>Générateur de signature email</h2>
-    <form id="signature-form">
-      <input type="text" id="nom" placeholder="Prénom NOM" required>
-      <input type="text" id="emploi" placeholder="Emploi" required>
-      <input type="text" id="service" placeholder="Service" required>
-      <input type="tel" id="tel" placeholder="Fixe">
-      <input type="tel" id="poste" placeholder="Poste">
-      <input type="tel" id="phone" placeholder="Portable">
-      <input type="email" id="email" placeholder="Adresse email" required>
-      <button type="submit">Générer la signature</button>
-    </form>
 
-    <div id="signature-preview"></div>
-  </div>
+<header>
+  <h1>Générateur de signature mail</h1>
+  <p>Créez votre signature officielle en quelques secondes</p>
+</header>
 
-  <script>
-    const form = document.getElementById('signature-form');
-    const preview = document.getElementById('signature-preview');
-    const codeBox = document.getElementById('signature-code');
+<main>
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nom = document.getElementById('nom').value;
-      const emploi = document.getElementById('emploi').value;
-      const service = document.getElementById('service').value;
-      const tel = document.getElementById('tel').value;
-      const poste = document.getElementById('poste').value;
-      const phone = document.getElementById('phone').value;
-      const email = document.getElementById('email').value;
+  <section class="card">
+    <h2>Informations de l’agent</h2>
 
-      const signature = `
-       <table background-color: #ffffff; style="font-family: Arial, sans-serif; font-size: 14px; color: #333; width: 100%; margin: center;">
-  <tr>
-    <td colspan="2" style="padding:0;">
-      <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/bandeau.png" alt="Bandeau haut" style="width:100%; max-height:100px;">
-    </td>
-  </tr>
- <tr>
-  <td colspan="2" style="text-align: center;">
-    <table style="margin: auto; max-width: 500px; text-align: left;">
-      <tr>
-        <td style="padding-right: 15px; border-right: 3px solid #000000; vertical-align: top; vertical-align: middle;">
-         <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" width="80" alt="Logo">
-        </td>
-        <td style="text-align: left; margin: center;">
-          <strong style="font-size: 20px;">${nom}</strong><br>
-          <strong>${service}</strong> / ${emploi}<br>
-          ${poste && tel ? `📞 ${poste} / ${tel}<br>` : poste ? `📞 ${poste}<br>` : tel ? `📞 ${tel}<br>` : ''}
-           ${phone ? `📱 ${phone}<br>` : ''}
-          ✉️ <a href="mailto:${email}">${email}</a><br>
-          🌐 <a href="https://www.ville-lamentin.fr">www.ville-lamentin.fr</a><br>
-          ⓕ <a href="https://fr-fr.facebook.com/villelamentin971">Ville Lamentin 971</a>   
-        </td>
-      </tr>
-    </table>
-  </td>
-</tr>
-  <tr>
-    <td colspan="2" style="padding:0;">
-      <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/bandeau%20bas.png " alt="Bandeau bas" style="width:100%; max-height:100px;">
-    </td>
-  </tr>
-</table>
-`;
+    <label>Nom et prénom</label>
+    <input id="name" type="text" placeholder="Ex : Manuel NAVIS">
 
-      preview.innerHTML = signature;
-      codeBox.textContent = signature;
+    <label>Fonction</label>
+    <input id="job" type="text" placeholder="Ex : Technicien informatique">
+
+    <label>Service / Direction</label>
+    <input id="service" type="text" placeholder="Ex : Direction Aménagement Numérique">
+
+    <label>Téléphone fixe</label>
+    <input id="phone" type="text" placeholder="Ex : 0590 00 00 00">
+
+    <label>Téléphone mobile</label>
+    <input id="mobile" type="text" placeholder="Ex : 0690 00 00 00">
+
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Ex : prenom.nom@ville.fr">
+
+    <button onclick="copySignature()">Copier la signature</button>
+
+    <div class="help">
+      <strong>Installation Gmail :</strong><br>
+      Gmail → Paramètres → Voir tous les paramètres → Signature → Nouvelle signature → Coller → Enregistrer.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Aperçu de la signature</h2>
+
+    <div class="preview-box">
+      <div id="signature">
+        <table cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; max-width: 600px;">
+          <tr>
+            <td style="padding-right: 18px; border-right: 3px solid #005b8f;">
+              <img src="https://via.placeholder.com/95x95.png?text=LOGO" alt="Logo" width="95" style="border-radius: 12px;">
+            </td>
+
+            <td style="padding-left: 18px;">
+              <div style="font-size: 18px; font-weight: bold; color: #005b8f;" id="sigName">
+                Nom Prénom
+              </div>
+
+              <div style="font-size: 14px; color: #333333; margin-top: 3px;" id="sigJob">
+                Fonction
+              </div>
+
+              <div style="font-size: 13px; color: #666666; margin-top: 3px;" id="sigService">
+                Service / Direction
+              </div>
+
+              <div style="height: 1px; background: #d9e2ec; margin: 10px 0;"></div>
+
+              <div style="font-size: 13px; color: #333333;">
+                ☎ <span id="sigPhone">0590 00 00 00</span><br>
+                📱 <span id="sigMobile">0690 00 00 00</span><br>
+                ✉ <span id="sigEmail">prenom.nom@ville.fr</span><br>
+                🌐 www.ville-lamentin.fr
+              </div>
+
+              <div style="margin-top: 10px; font-size: 12px; color: #005b8f; font-weight: bold;">
+                Ville du Lamentin · Guadeloupe
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const fields = {
+    name: "sigName",
+    job: "sigJob",
+    service: "sigService",
+    phone: "sigPhone",
+    mobile: "sigMobile",
+    email: "sigEmail"
+  };
+
+  Object.keys(fields).forEach(field => {
+    document.getElementById(field).addEventListener("input", function () {
+      document.getElementById(fields[field]).textContent =
+        this.value || this.placeholder.replace("Ex : ", "");
     });
-  </script>
+  });
+
+  function copySignature() {
+    const signature = document.getElementById("signature");
+    const range = document.createRange();
+    range.selectNode(signature);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    document.execCommand("copy");
+    selection.removeAllRanges();
+
+    alert("Signature copiée. Vous pouvez maintenant la coller dans Gmail.");
+  }
+</script>
+
 </body>
 </html>
