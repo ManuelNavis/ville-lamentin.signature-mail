@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur de signature mail</title>
+
+  <style>
+    :root {
+      --primary: #005b8f;
+      --secondary: #00a6a6;
+      --dark: #1f2933;
+      --light: #f4f7fb;
+      --white: #ffffff;
+      --text: #333333;
+      --border: #d9e2ec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00476f;
+    }
+
+    .preview-box {
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      background: #ffffff;
+      overflow-x: auto;
+    }
+
+    .help {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef8f8;
+      border-left: 4px solid var(--secondary);
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 850px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Générateur de signature mail</h1>
+  <p>Créez votre signature officielle en quelques secondes</p>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>Informations de l’agent</h2>
+
+    <label>Nom et prénom</label>
+    <input id="name" type="text" placeholder="Ex : Manuel NAVIS">
+
+    <label>Fonction</label>
+    <input id="job" type="text" placeholder="Ex : Technicien informatique">
+
+    <label>Service / Direction</label>
+    <input id="service" type="text" placeholder="Ex : Direction Aménagement Numérique">
+
+    <label>Téléphone fixe</label>
+    <input id="phone" type="text" placeholder="Ex : 0590 00 00 00">
+
+    <label>Téléphone mobile</label>
+    <input id="mobile" type="text" placeholder="Ex : 0690 00 00 00">
+
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Ex : prenom.nom@ville.fr">
+
+    <button onclick="copySignature()">Copier la signature</button>
+
+    <div class="help">
+      <strong>Installation Gmail :</strong><br>
+      Gmail → Paramètres → Voir tous les paramètres → Signature → Nouvelle signature → Coller → Enregistrer.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Aperçu de la signature</h2>
+
+    <div class="preview-box">
+      <div id="signature">
+  <table cellpadding="0" cellspacing="0" style="font-family: Arial, Helvetica, sans-serif; max-width: 650px; background:#ffffff;">
+    <tr>
+      <!-- Bloc logo -->
+      <td style="width:130px; padding:18px; background:linear-gradient(135deg,#005b8f,#00a6a6); text-align:center; border-radius:18px 0 0 18px;">
+        <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo" width="88" style="display:block; margin:auto; border-radius:14px; background:#ffffff; padding:8px;">
+      </td>
+
+      <!-- Bloc infos -->
+      <td style="padding:18px 22px; border:1px solid #e5e7eb; border-left:none; border-radius:0 18px 18px 0;">
+        <div style="font-size:20px; font-weight:700; color:#005b8f; letter-spacing:0.2px;" id="sigName">
+          Manuel NAVIS
+        </div>
+
+        <div style="font-size:14px; color:#111827; margin-top:4px; font-weight:600;" id="sigJob">
+          Technicien informatique & infographiste
+        </div>
+
+        <div style="font-size:13px; color:#6b7280; margin-top:3px;" id="sigService">
+          Direction Aménagement Numérique et Systèmes d’Information
+        </div>
+
+        <div style="height:2px; width:70px; background:#00a6a6; margin:12px 0;"></div>
+
+        <table cellpadding="0" cellspacing="0" style="font-size:13px; color:#374151; line-height:1.7;">
+          <tr>
+            <td style="padding-right:8px;">☎</td>
+            <td id="sigPhone">0590 00 00 00</td>
+          </tr>
+          <tr>
+            <td style="padding-right:8px;">📱</td>
+            <td id="sigMobile">0690 00 00 00</td>
+          </tr>
+          <tr>
+            <td style="padding-right:8px;">✉</td>
+            <td>
+              <a href="mailto:prenom.nom@ville.fr" id="sigEmail" style="color:#005b8f; text-decoration:none;">
+                prenom.nom@ville.fr
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-right:8px;">🌐</td>
+            <td>
+              <a href="https://www.ville-lamentin.fr" style="color:#005b8f; text-decoration:none;">
+                www.ville-lamentin.fr
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <div style="margin-top:12px; padding:8px 12px; background:#f0f9ff; border-radius:20px; display:inline-block; font-size:12px; color:#005b8f; font-weight:700;">
+          Ville du Lamentin · Guadeloupe
+        </div>
+      </td>
+    </tr>
+
+    <!-- Bannière dynamique optionnelle -->
+    <tr>
+      <td colspan="2" style="padding-top:10px;">
+        <a href="https://www.ville-lamentin.fr" style="text-decoration:none;">
+          <img src="https://via.placeholder.com/650x90.png?text=Actualité+de+la+collectivité" 
+               alt="Actualité de la collectivité"
+               width="650"
+               style="display:block; max-width:100%; border-radius:14px;">
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const fields = {
+    name: "sigName",
+    job: "sigJob",
+    service: "sigService",
+    phone: "sigPhone",
+    mobile: "sigMobile",
+    email: "sigEmail"
+  };
+
+  Object.keys(fields).forEach(field => {
+    document.getElementById(field).addEventListener("input", function () {
+      document.getElementById(fields[field]).textContent =
+        this.value || this.placeholder.replace("Ex : ", "");
+    });
+  });
+
+  function copySignature() {
+    const signature = document.getElementById("signature");
+    const range = document.createRange();
+    range.selectNode(signature);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    document.execCommand("copy");
+    selection.removeAllRanges();
+
+    alert("Signature copiée. Vous pouvez maintenant la coller dans Gmail.");
+  }
+</script>
+
+</body>
+</html>
