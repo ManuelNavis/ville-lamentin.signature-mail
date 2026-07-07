@@ -1,118 +1,186 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <header style="text-align: center; padding: 10px;">
-  <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo" width="150">
-</header>
-
-<head>
+<!doctype html>
+<html lang="fr"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260707-05-f6eb95b"}');</script><script src="/_sdk/f432b76fb310b513.telemetry_sdk.js" integrity="sha512-9FJQ55EKmmqhyyik8BhrMVfm0+iYYfb8uOlRsjtkxJMEI97qOVEI4PnHohDjQAtvAep0IOEpdQ64eki0sz62ug=="></script>
   <meta charset="UTF-8">
-  <title>Générateur de Signature Email</title>
-  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de Signature Mail</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
-      padding: 2rem;
-    }
-    .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input, button {
-      padding: 0.5rem;
-      font-size: 1rem;
-      width: 100%;
-      margin: 0.5rem 0;
-    }
-    #signature-preview {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #fff;
-      border: 1px solid #ddd;
-    }
-    .code-box {
-      background: #eee;
-      padding: 1rem;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-family: monospace;
-    }
+    body { font-family: 'DM Sans', sans-serif; }
+    .code-block { font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; }
+    .toast { animation: fadeInOut 2.5s ease; }
+    @keyframes fadeInOut { 0%{opacity:0;transform:translateY(10px)} 10%{opacity:1;transform:translateY(0)} 80%{opacity:1} 100%{opacity:0;transform:translateY(-10px)} }
+    input:focus { border-color: #c9a84c !important; box-shadow: 0 0 0 2px rgba(201,168,76,0.2); }
   </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Générateur de signature email</h2>
-    <form id="signature-form">
-      <input type="text" id="nom" placeholder="Prénom NOM" required>
-      <input type="text" id="emploi" placeholder="Emploi" required>
-      <input type="text" id="service" placeholder="Service" required>
-      <input type="tel" id="tel" placeholder="Fixe">
-      <input type="tel" id="poste" placeholder="Poste">
-      <input type="tel" id="phone" placeholder="Portable">
-      <input type="email" id="email" placeholder="Adresse email" required>
-      <button type="submit">Générer la signature</button>
-    </form>
-
-    <div id="signature-preview"></div>
-  </div>
-
+  <script src="/_sdk/0179d719c431a79e.data_sdk.js" type="text/javascript" integrity="sha512-OsRvJkI5GkC3MJQcgotQYotpzrMSX415GiKKgvYdxQEEkzD/fdchShO2FMSy0PJr/tiINMXOk5Vl2zAgg6bUiA=="></script>
+  <script src="/_sdk/0b3af1c300e720aa.resizing_sdk.js" type="text/javascript" integrity="sha512-nX1P6oXZmEY5wCI2lUVg3BwKu1cr0yi+ZpXgZ0Yn90vkSwvpmyzBMvOyD6VLJUtBwFI2dSrw1b6OvORxSggw3w=="></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen" style="background: rgb(255, 255, 255);">
+  <header class="py-8 px-4 border-b border-gray-800/30">
+   <div class="max-w-6xl mx-auto flex items-center gap-4 justify-center">
+    <img data-template-id="header-logo" class="canva-image w-14 h-14 object-contain" loading="lazy" src="https://www.ville-lamentin.fr/local/cache-vignettes/L64xH64/logo_lamentin-transparent2-95ed3.png?1756998896" alt="Logo Lamentin Guadeloupe">
+    <div class="text-center">
+     <h1 data-template-id="page-title" class="canva-text font-bold" style="color: rgb(59, 130, 246); font-weight: 800; font-style: normal; font-size: 28px;">Générateur de Signature Mail</h1>
+     <p data-template-id="page-subtitle" class="canva-text mt-1" style="color: rgb(201, 168, 76); font-weight: 400; font-style: normal; font-size: 15px;">Créez une signature premium Ville de Lamentin, prête pour Gmail.</p>
+    </div>
+   </div>
+  </header>
+  <main class="max-w-6xl mx-auto px-4 pb-12 mt-8">
+   <div class="grid lg:grid-cols-2 gap-8">
+    <section data-template-id="form-card" class="canva-card rounded-2xl p-7 shadow-lg border border-gray-700/20" style="background: rgb(26, 34, 56);">
+     <h2 data-template-id="form-heading" class="canva-text font-semibold mb-6" style="color: rgb(201, 168, 76); font-weight: 700; font-style: normal; font-size: 18px;">Informations</h2>
+     <form id="sig-form" class="space-y-4" onsubmit="event.preventDefault()">
+      <div class="grid grid-cols-2 gap-3">
+       <div>
+        <label for="f-name" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Nom complet</label> <input id="f-name" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="Marie Dupont">
+       </div>
+       <div>
+        <label for="f-title" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Poste</label> <input id="f-title" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="Directrice Marketing">
+       </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+       <div>
+        <label for="f-phone" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Téléphone</label> <input id="f-phone" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="+590 590 25 00 00">
+       </div>
+       <div>
+        <label for="f-mobile" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Portable</label> <input id="f-mobile" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" placeholder="+590 6XX XX XX XX">
+       </div>
+      </div>
+      <div>
+       <label for="f-email" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Email</label> <input id="f-email" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="contact@ville-lamentin.fr">
+      </div>
+      <div>
+       <label for="f-website" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Site web</label> <input id="f-website" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="www.ville-lamentin.fr">
+      </div>
+      <div>
+       <label for="f-address" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Adresse</label> <input id="f-address" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="Rue de la République, 97129 Lamentin">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+       <div>
+        <label for="f-initials" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Initiales</label> <input id="f-initials" class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-500 outline-none" value="VL" maxlength="3">
+       </div>
+       <div>
+        <label for="f-color" class="text-xs font-semibold text-gray-400 mb-1 block uppercase tracking-wider">Couleur accent</label> <input id="f-color" type="color" class="w-full h-11 rounded-lg border border-gray-600 cursor-pointer bg-gray-800/50" value="#c9a84c">
+       </div>
+      </div>
+     </form>
+     <div class="mt-6 flex gap-3 flex-wrap">
+      <button data-template-id="btn-copy-preview" class="canva-button px-5 py-2.5 rounded-lg text-sm font-semibold tracking-wide" onclick="copyPreview()" style="background: rgb(201, 168, 76); color: rgb(15, 21, 32); font-weight: 700; font-style: normal; font-size: 15px;">📋 Copier la signature</button> <button data-template-id="btn-copy-html" class="canva-button px-5 py-2.5 rounded-lg text-sm font-medium" onclick="copyHTML()" style="background: rgb(42, 52, 80); color: rgb(201, 168, 76); font-weight: 600; font-style: normal; font-size: 15px;">&lt; &gt; Copier le HTML</button> <button data-template-id="btn-reset" class="canva-button px-4 py-2.5 rounded-lg text-sm font-medium border border-gray-600" onclick="resetForm()" style="background: transparent; color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 15px;">Réinitialiser</button>
+     </div>
+    </section>
+    <section class="space-y-6">
+     <div data-template-id="preview-card" class="canva-card rounded-2xl p-6 shadow-lg border border-gray-700/20" style="background: rgb(26, 34, 56);">
+      <h2 data-template-id="preview-heading" class="canva-text font-semibold mb-4" style="color: rgb(201, 168, 76); font-weight: 700; font-style: normal; font-size: 18px;">Aperçu en direct</h2>
+      <div id="sig-preview" class="border border-gray-200 rounded-xl p-5 bg-white"></div>
+     </div>
+     <div data-template-id="html-card" class="canva-card rounded-2xl p-6 shadow-lg border border-gray-700/20" style="background: rgb(26, 34, 56);">
+      <h2 data-template-id="html-heading" class="canva-text font-semibold mb-3" style="color: rgb(201, 168, 76); font-weight: 700; font-style: normal; font-size: 18px;">Code HTML généré</h2>
+      <div id="sig-html" class="code-block bg-gray-900 border border-gray-700 rounded-lg p-3 text-gray-300"></div>
+     </div>
+    </section>
+   </div>
+   <section data-template-id="help-card" class="canva-card rounded-2xl p-6 shadow-lg border border-gray-700/20 mt-10 max-w-2xl mx-auto" style="background: rgb(26, 34, 56);">
+    <h2 data-template-id="help-heading" class="canva-text font-semibold mb-4" style="color: rgb(201, 168, 76); font-weight: 700; font-style: normal; font-size: 18px;">Comment l'installer dans Gmail</h2>
+    <ol class="space-y-3 text-sm list-decimal list-inside">
+     <li data-template-id="help-step-1" class="canva-text" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 15px;">Ouvrez Gmail → Paramètres (⚙️) → Voir tous les paramètres → onglet « Général » → section « Signature ».</li>
+     <li data-template-id="help-step-2" class="canva-text" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 15px;">Cliquez « Copier la signature » ci-dessus, puis collez directement dans le champ signature de Gmail (Ctrl+V / Cmd+V).</li>
+     <li data-template-id="help-step-3" class="canva-text" style="color: rgb(156, 163, 175); font-weight: 400; font-style: normal; font-size: 15px;">Enregistrez les modifications en bas de page. Votre nouvelle signature apparaîtra dans tous vos prochains emails !</li>
+    </ol>
+   </section>
+  </main>
+  <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 pointer-events-none z-50"></div>
+  <script src="/_sdk/e063511df281944a.editing_sdk.js" integrity="sha512-Xa8p4aPfoMxVnzxQE2WAG0FfoaPLxdjOJMfUZGm1yZosJTYmnNDvgLkJ2EoN0i3zxjeQVAzUMSXNvTKQVqbXyQ=="></script>
   <script>
-    const form = document.getElementById('signature-form');
-    const preview = document.getElementById('signature-preview');
-    const codeBox = document.getElementById('signature-code');
+    lucide.createIcons();
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nom = document.getElementById('nom').value;
-      const emploi = document.getElementById('emploi').value;
-      const service = document.getElementById('service').value;
-      const tel = document.getElementById('tel').value;
-      const poste = document.getElementById('poste').value;
-      const phone = document.getElementById('phone').value;
-      const email = document.getElementById('email').value;
+    const fields = ['name','title','phone','mobile','email','website','address','initials','color'];
+    const els = {};
+    fields.forEach(f => els[f] = document.getElementById('f-' + f));
 
-      const signature = `
-       <table background-color: #ffffff; style="font-family: Arial, sans-serif; font-size: 14px; color: #333; width: 100%; margin: center;">
-  <tr>
-    <td colspan="2" style="padding:0;">
-      <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/bandeau.png" alt="Bandeau haut" style="width:100%; max-height:100px;">
-    </td>
-  </tr>
- <tr>
-  <td colspan="2" style="text-align: center;">
-    <table style="margin: auto; max-width: 500px; text-align: left;">
-      <tr>
-        <td style="padding-right: 15px; border-right: 3px solid #000000; vertical-align: top; vertical-align: middle;">
-         <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" width="80" alt="Logo">
-        </td>
-        <td style="text-align: left; margin: center;">
-          <strong style="font-size: 20px;">${nom}</strong><br>
-          <strong>${service}</strong> / ${emploi}<br>
-          ${poste && tel ? `📞 ${poste} / ${tel}<br>` : poste ? `📞 ${poste}<br>` : tel ? `📞 ${tel}<br>` : ''}
-           ${phone ? `📱 ${phone}<br>` : ''}
-          ✉️ <a href="mailto:${email}">${email}</a><br>
-          🌐 <a href="https://www.ville-lamentin.fr">www.ville-lamentin.fr</a><br>
-          ⓕ <a href="https://fr-fr.facebook.com/villelamentin971">Ville Lamentin 971</a>   
-        </td>
-      </tr>
-    </table>
-  </td>
+    function getVals() {
+      const v = {};
+      fields.forEach(f => v[f] = els[f].value.trim());
+      return v;
+    }
+
+    function generateSignatureHTML(v) {
+      const c = v.color || '#c9a84c';
+      const logoUrl = 'https://www.ville-lamentin.fr/local/cache-vignettes/L64xH64/logo_lamentin-transparent2-95ed3.png?1756998896';
+      const dark = '#0a0f1a';
+
+      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:13px;color:#3a3f4a;line-height:1.5;max-width:500px;">
+<tr>
+<td style="padding:0 0 12px 0;">
+<table cellpadding="0" cellspacing="0" border="0"><tr>
+<td style="vertical-align:top;padding-right:16px;">
+<div style="width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+<img src="${logoUrl}" width="48" height="48" style="display:block;object-fit:contain;" alt="Logo Lamentin">
+</div>
+</td>
+<td style="vertical-align:middle;">
+<div style="font-size:18px;font-weight:800;color:${dark};letter-spacing:-0.5px;line-height:1.1;">${v.name || ''}</div>
+${v.title ? `<div style="font-size:11px;color:${c};font-weight:700;margin-top:4px;text-transform:uppercase;letter-spacing:1.5px;">${v.title}</div>` : ''}
+</td>
+</tr></table>
+</td>
 </tr>
-  <tr>
-    <td colspan="2" style="padding:0;">
-      <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/bandeau%20bas.png " alt="Bandeau bas" style="width:100%; max-height:100px;">
-    </td>
-  </tr>
+<tr><td style="padding:0;"><div style="height:2px;background:linear-gradient(90deg,${c},${c}55,transparent);border-radius:2px;"></div></td></tr>
+<tr>
+<td style="padding:12px 0 0 0;">
+<table cellpadding="0" cellspacing="0" border="0" style="font-size:12px;color:#4a5060;line-height:1.8;">
+${v.phone ? `<tr><td style="padding-right:10px;color:${c};font-weight:bold;vertical-align:top;font-size:13px;">☎</td><td style="font-weight:500;">${v.phone}</td></tr>` : ''}
+${v.mobile ? `<tr><td style="padding-right:10px;color:${c};font-weight:bold;vertical-align:top;font-size:13px;">📱</td><td style="font-weight:500;">${v.mobile}</td></tr>` : ''}
+${v.email ? `<tr><td style="padding-right:10px;color:${c};font-weight:bold;vertical-align:top;font-size:13px;">✉</td><td><a href="mailto:${v.email}" style="color:${dark};text-decoration:none;font-weight:700;">${v.email}</a></td></tr>` : ''}
+${v.website ? `<tr><td style="padding-right:10px;color:${c};font-weight:bold;vertical-align:top;font-size:13px;">🌐</td><td><a href="https://${v.website.replace(/^https?:\/\//,'')}" style="color:${dark};text-decoration:none;font-weight:700;">${v.website}</a></td></tr>` : ''}
+${v.address ? `<tr><td style="padding-right:10px;color:${c};font-weight:bold;vertical-align:top;font-size:13px;">📍</td><td style="font-weight:500;">${v.address.replace(/\n/g,', ')}</td></tr>` : ''}
 </table>
-`;
+</td>
+</tr>
+<tr><td style="padding-top:12px;"><div style="font-size:9px;font-weight:800;color:${c};letter-spacing:2px;text-transform:uppercase;">Ville de Lamentin · Guadeloupe</div></td></tr>
+</table>`;
+    }
 
-      preview.innerHTML = signature;
-      codeBox.textContent = signature;
-    });
+    function updatePreview() {
+      const v = getVals();
+      const html = generateSignatureHTML(v);
+      document.getElementById('sig-preview').innerHTML = html;
+      document.getElementById('sig-html').textContent = html;
+    }
+
+    fields.forEach(f => els[f].addEventListener('input', updatePreview));
+    updatePreview();
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast bg-black text-amber-300 px-5 py-2.5 rounded-lg text-sm shadow-xl font-medium border border-amber-600/30';
+      t.textContent = msg;
+      document.getElementById('toast-container').appendChild(t);
+      setTimeout(() => t.remove(), 2600);
+    }
+
+    async function copyPreview() {
+      const html = document.getElementById('sig-preview').innerHTML;
+      try {
+        await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([html],{type:'text/html'}), 'text/plain': new Blob([html],{type:'text/plain'})})]);
+        showToast('✓ Signature copiée !');
+      } catch { showToast('Erreur — copiez manuellement'); }
+    }
+
+    async function copyHTML() {
+      const html = generateSignatureHTML(getVals());
+      try { await navigator.clipboard.writeText(html); showToast('✓ Code HTML copié !'); }
+      catch { showToast('Erreur — copiez manuellement'); }
+    }
+
+    function resetForm() {
+      els.name.value='Marie Dupont'; els.title.value='Directrice Marketing';
+      els.phone.value='+590 590 25 00 00'; els.mobile.value=''; els.email.value='contact@ville-lamentin.fr'; els.website.value='www.ville-lamentin.fr';
+      els.address.value='Rue de la République, 97129 Lamentin';
+      els.initials.value='VL'; els.color.value='#c9a84c';
+      updatePreview();
+      showToast('Données réinitialisées');
+    }
   </script>
-</body>
-</html>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a176dedec7bdb7d3',t:'MTc4MzQyNzUzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
