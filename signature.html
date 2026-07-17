@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="fr"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260708-05-579f504"}');</script><script src="/_sdk/f432b76fb310b513.telemetry_sdk.js" integrity="sha512-9FJQ55EKmmqhyyik8BhrMVfm0+iYYfb8uOlRsjtkxJMEI97qOVEI4PnHohDjQAtvAep0IOEpdQ64eki0sz62ug=="></script>
+<html lang="fr"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Générateur de signature mail</title>
+  <title>Générateur de signature mail - QR corrigé</title>
   <link rel="icon" href="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" type="image/png">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -24,13 +24,31 @@
     .copy-btn { width: 100%; margin-top: 40px; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
     .copy-btn:hover { background: #00476f; }
     .preview-box { border: 1px dashed var(--border); border-radius: 14px; padding: 20px; background: #fff; overflow-x: auto; }
+    #qrcode-container {
+      width: 196px;
+      min-width: 196px;
+      min-height: 196px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      padding: 7px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+    #qrcode-container img {
+      display: block;
+      width: 180px;
+      height: 180px;
+      image-rendering: pixelated;
+    }
     .toast { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #005b8f; color: #fff; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: bold; box-shadow: 0 6px 24px rgba(0,0,0,0.18); z-index: 9999; }
     .toast.show { display: block; }
     @media (max-width: 850px) { main { grid-template-columns: 1fr; } }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="/_sdk/0179d719c431a79e.data_sdk.js" type="text/javascript" integrity="sha512-OsRvJkI5GkC3MJQcgotQYotpzrMSX415GiKKgvYdxQEEkzD/fdchShO2FMSy0PJr/tiINMXOk5Vl2zAgg6bUiA=="></script>
-  <script src="/_sdk/9432170dbd2ae0df.resizing_sdk.js" type="text/javascript" integrity="sha512-FeT+58sb1f9ejWPWFjCbJvTT+SDwGV+ngrHUnlO7TWEOoqwOLj6p256kO3vOL7DIWl1cIgrobiof8v2bOigwPg=="></script>
+  
+  
+  
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
  </head>
  <body data-template-id="__page-root" style="background: rgb(244, 247, 251);">
@@ -99,10 +117,10 @@
             <div data-template-id="sig-pill" class="canva-text" style="margin-top: 12px; padding: 8px 12px; background: rgb(240, 249, 255); border-radius: 20px; display: inline-block; font-size: 12px; color: rgb(0, 91, 143); font-weight: 700; font-style: normal;">Ville du Lamentin · Guadeloupe</div>
            </div>
            <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0;">
-            <div style="font-size:11px; color:#6b7280; font-weight:600;">
-             Scanner
+            <div style="font-size:11px; color:#6b7280; font-weight:600; text-align:center;">
+             Scannez pour enregistrer le contact
             </div>
-            <div id="qrcode-container" style="background:#fff; padding:6px; border-radius:8px; border:1px solid #e5e7eb;"></div>
+            <div id="qrcode-container" aria-label="QR code de la fiche contact"></div>
            </div>
           </div></td>
         </tr>
@@ -117,40 +135,151 @@
   </main>
   <div class="toast" id="toast"></div>
   <script>
-    const fields = { name:"sigName", job:"sigJob", service:"sigService", phone:"sigPhone", mobile:"sigMobile", extension:"sigExtension", email:"sigEmail" };
+    const fields = {
+      name: "sigName",
+      job: "sigJob",
+      service: "sigService",
+      phone: "sigPhone",
+      mobile: "sigMobile",
+      extension: "sigExtension",
+      email: "sigEmail"
+    };
+
+    function escapeVCardValue(value) {
+      return String(value || "")
+        .replace(/\\/g, "\\\\")
+        .replace(/\r\n|\r|\n/g, "\\n")
+        .replace(/;/g, "\\;")
+        .replace(/,/g, "\\,");
+    }
+
+    function normalizePhone(value) {
+      const phone = String(value || "").trim();
+      const hasPlus = phone.startsWith("+");
+      const digits = phone.replace(/\D/g, "");
+      return (hasPlus ? "+" : "") + digits;
+    }
+
+    function splitFullName(fullName) {
+      const parts = String(fullName || "").trim().split(/\s+/).filter(Boolean);
+
+      if (parts.length <= 1) {
+        return { firstName: parts[0] || "", lastName: "" };
+      }
+
+      const lastName = parts.pop();
+      return {
+        firstName: parts.join(" "),
+        lastName
+      };
+    }
 
     function generateVCard() {
-      const name = document.getElementById("name").value || "Manuel NAVIS";
-      const job = document.getElementById("job").value || "Technicien informatique";
-      const service = document.getElementById("service").value || "Direction Aménagement Numérique";
-      const phone = document.getElementById("phone").value || "0590 00 00 00";
-      const mobile = document.getElementById("mobile").value;
-      const extension = document.getElementById("extension").value;
-      const email = document.getElementById("email").value || "prenom.nom@ville-lamentin.fr";
+      const name = document.getElementById("name").value.trim() || "Manuel NAVIS";
+      const job = document.getElementById("job").value.trim() || "Technicien informatique";
+      const service = document.getElementById("service").value.trim() || "Direction Aménagement Numérique";
+      const phone = document.getElementById("phone").value.trim() || "0590 00 00 00";
+      const mobile = document.getElementById("mobile").value.trim();
+      const extension = document.getElementById("extension").value.trim();
+      const email = document.getElementById("email").value.trim() || "prenom.nom@ville-lamentin.fr";
+      const { firstName, lastName } = splitFullName(name);
 
-      let vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nORG:Ville du Lamentin;${service}\nTITLE:${job}\nTEL;TYPE=WORK,VOICE:${phone}`;
-      if (extension && extension.trim()) vcard += `\nTEL;TYPE=WORK,VOICE;X-EXTENSION:${extension}`;
-      if (mobile && mobile.trim()) vcard += `\nTEL;TYPE=CELL:${mobile}`;
-      vcard += `\nEMAIL:${email}\nURL:https://www.ville-lamentin.fr\nEND:VCARD`;
-      return vcard;
+      const lines = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N:${escapeVCardValue(lastName)};${escapeVCardValue(firstName)};;;`,
+        `FN:${escapeVCardValue(name)}`,
+        `ORG:${escapeVCardValue("Ville du Lamentin")};${escapeVCardValue(service)}`,
+        `TITLE:${escapeVCardValue(job)}`
+      ];
+
+      const workPhone = normalizePhone(phone);
+      if (workPhone) {
+        lines.push(`TEL;TYPE=WORK,VOICE:${workPhone}`);
+      }
+
+      const mobilePhone = normalizePhone(mobile);
+      if (mobilePhone) {
+        lines.push(`TEL;TYPE=CELL,VOICE:${mobilePhone}`);
+      }
+
+      if (extension) {
+        lines.push(`NOTE:${escapeVCardValue("Poste " + extension)}`);
+      }
+
+      lines.push(
+        `EMAIL;TYPE=INTERNET:${escapeVCardValue(email)}`,
+        "URL:https://www.ville-lamentin.fr",
+        "END:VCARD"
+      );
+
+      return lines.join("\r\n");
     }
 
     function updateQRCode() {
       const container = document.getElementById("qrcode-container");
       container.innerHTML = "";
-      new QRCode(container, { text: generateVCard(), width: 100, height: 100, colorDark: "#005b8f", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+
+      if (typeof QRCode === "undefined") {
+        container.textContent = "QR code indisponible";
+        return;
+      }
+
+      const temporaryContainer = document.createElement("div");
+
+      new QRCode(temporaryContainer, {
+        text: generateVCard(),
+        width: 180,
+        height: 180,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+
+      const canvas = temporaryContainer.querySelector("canvas");
+      const generatedImage = temporaryContainer.querySelector("img");
+      const finalImage = document.createElement("img");
+
+      if (canvas) {
+        finalImage.src = canvas.toDataURL("image/png");
+      } else if (generatedImage && generatedImage.src) {
+        finalImage.src = generatedImage.src;
+      } else {
+        container.textContent = "Impossible de générer le QR code";
+        return;
+      }
+
+      finalImage.width = 180;
+      finalImage.height = 180;
+      finalImage.alt = "QR code contenant les coordonnées de l’agent";
+      finalImage.setAttribute("draggable", "false");
+      container.appendChild(finalImage);
     }
 
     Object.keys(fields).forEach(field => {
       const el = document.getElementById(field);
       if (!el) return;
+
       el.addEventListener("input", function() {
         const sigEl = document.getElementById(fields[field]);
         const val = this.value || this.placeholder.replace("Ex : ", "");
+
         sigEl.textContent = val;
-        if (field === "email") sigEl.href = "mailto:" + val;
-        if (field === "mobile") document.getElementById("mobileRow").style.display = this.value.trim() ? "table-row" : "none";
-        if (field === "extension") document.getElementById("extensionRow").style.display = this.value.trim() ? "table-row" : "none";
+
+        if (field === "email") {
+          sigEl.href = "mailto:" + val;
+        }
+
+        if (field === "mobile") {
+          document.getElementById("mobileRow").style.display =
+            this.value.trim() ? "table-row" : "none";
+        }
+
+        if (field === "extension") {
+          document.getElementById("extensionRow").style.display =
+            this.value.trim() ? "table-row" : "none";
+        }
+
         updateQRCode();
       });
     });
@@ -165,17 +294,23 @@
       const sig = document.getElementById("signature");
       const range = document.createRange();
       range.selectNode(sig);
+
       const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-      document.execCommand("copy");
+
+      const copied = document.execCommand("copy");
       sel.removeAllRanges();
+
       const toast = document.getElementById("toast");
-      toast.textContent = "Signature copiée ! Collez-la dans Gmail (Ctrl+V / Cmd+V).";
+      toast.textContent = copied
+        ? "Signature copiée ! Collez-la dans Gmail (Ctrl+V / Cmd+V)."
+        : "La copie automatique a échoué. Sélectionnez la signature puis copiez-la manuellement.";
+
       toast.classList.add("show");
       setTimeout(() => toast.classList.remove("show"), 3500);
     }
   </script>
-  <script src="/_sdk/719055fef2a85d14.editing_sdk.js" integrity="sha512-kFqrdGgIiTOsu307feB5Cy3JVP9IayftsmCIZ0csxYBGuBmJQPhyvcnmKR8F0fTW97h5s1gAvz3SumI8zJ6OxQ=="></script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a17ff688133bd941',t:'MTc4MzUyMjg3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+  
+ 
 </body></html>
