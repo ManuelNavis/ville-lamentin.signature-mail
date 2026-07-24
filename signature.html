@@ -170,12 +170,46 @@
       email: "sigEmail"
     };
 
-    function escapeVCardValue(value) {
+    function normalizeUnicode(value) {
       return String(value || "")
+        .normalize("NFC")
+        .replace(/\u0000/g, "");
+    }
+
+    function escapeVCardValue(value) {
+      return normalizeUnicode(value)
         .replace(/\\/g, "\\\\")
         .replace(/\r\n|\r|\n/g, "\\n")
         .replace(/;/g, "\\;")
         .replace(/,/g, "\\,");
+    }
+
+    function getUtf8Bytes(value) {
+      const normalizedValue = normalizeUnicode(value);
+
+      if (typeof TextEncoder !== "undefined") {
+        return Array.from(new TextEncoder().encode(normalizedValue));
+      }
+
+      // Solution de secours pour les anciens navigateurs.
+      return Array.from(unescape(encodeURIComponent(normalizedValue)))
+        .map(character => character.charCodeAt(0));
+    }
+
+    function encodeQuotedPrintableUtf8(value) {
+      const escapedValue = escapeVCardValue(value);
+
+      return getUtf8Bytes(escapedValue)
+        .map(byte => {
+          // Les champs restent en ASCII dans le QR code. Les caractères
+          // accentués sont représentés sous la forme =C3=A9, par exemple.
+          if ((byte >= 33 && byte <= 60) || (byte >= 62 && byte <= 126)) {
+            return String.fromCharCode(byte);
+          }
+
+          return "=" + byte.toString(16).toUpperCase().padStart(2, "0");
+        })
+        .join("");
     }
 
     function normalizePhone(value) {
@@ -212,10 +246,11 @@
       const lines = [
         "BEGIN:VCARD",
         "VERSION:3.0",
-        `N:${escapeVCardValue(lastName)};${escapeVCardValue(firstName)};;;`,
-        `FN:${escapeVCardValue(name)}`,
-        `ORG:${escapeVCardValue("Ville du Lamentin")};${escapeVCardValue(service)}`,
-        `TITLE:${escapeVCardValue(job)}`
+        "PRODID:-//Ville du Lamentin//Generateur de signature//FR",
+        `N;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8(lastName)};${encodeQuotedPrintableUtf8(firstName)};;;`,
+        `FN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8(name)}`,
+        `ORG;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8("Ville du Lamentin")};${encodeQuotedPrintableUtf8(service)}`,
+        `TITLE;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8(job)}`
       ];
 
       const workPhone = normalizePhone(phone);
@@ -229,7 +264,7 @@
       }
 
       if (extension) {
-        lines.push(`NOTE:${escapeVCardValue("Poste " + extension)}`);
+        lines.push(`NOTE;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8("Poste " + extension)}`);
       }
 
       lines.push(
@@ -253,7 +288,7 @@
       const temporaryContainer = document.createElement("div");
 
       new QRCode(temporaryContainer, {
-        text: generateVCard(),
+        text: generateVCard().normalize("NFC"),
         width: 180,
         height: 180,
         colorDark: "#000000",
