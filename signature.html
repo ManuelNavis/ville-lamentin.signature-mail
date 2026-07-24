@@ -24,6 +24,27 @@
     .copy-btn { width: 100%; margin-top: 40px; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
     .copy-btn:hover { background: #00476f; }
     .preview-box { border: 1px dashed var(--border); border-radius: 14px; padding: 20px; background: #fff; overflow-x: auto; }
+
+    /* La page reste responsive, mais la signature conserve toujours sa taille d'origine. */
+    #signature {
+      width: 650px;
+      min-width: 650px;
+      max-width: none;
+    }
+
+    #signature > table {
+      width: 650px;
+      min-width: 650px;
+      max-width: none !important;
+      table-layout: fixed;
+    }
+
+    #signature .signature-banner {
+      width: 650px !important;
+      min-width: 650px !important;
+      max-width: none !important;
+    }
+
     #qrcode-container {
       width: 196px;
       min-width: 196px;
@@ -73,7 +94,7 @@
     <h2 data-template-id="preview-card-title" class="canva-text" style="color: rgb(0, 91, 143); font-weight: 700; font-style: normal; font-size: 22px;">Aperçu de la signature</h2>
     <div class="preview-box">
      <div id="signature">
-      <table cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif; max-width:650px; background:#fff;">
+      <table cellpadding="0" cellspacing="0" width="650" style="font-family:Arial,Helvetica,sans-serif; width:650px; min-width:650px; max-width:none; background:#fff; table-layout:fixed;">
        <tbody>
         <tr>
          <td style="width:130px; padding:18px; background:linear-gradient(135deg,#005b8f,#00a6a6); text-align:center; border-radius:18px 0 0 18px;">
@@ -131,9 +152,6 @@
             <div id="qrcode-container" aria-label="QR code de la fiche contact"></div>
            </div>
           </div></td>
-        </tr>
-        <tr>
-         <td colspan="2" style="padding-top:10px;"><a href="https://www.ville-lamentin.fr" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"> <img data-template-id="sig-banner" class="canva-image" width="650" loading="lazy" style="display:block; max-width:100%; border-radius:14px;" src="https://via.placeholder.com/650x90.png?text=Actualit%C3%A9+de+la+collectivit%C3%A9" alt="Actualité de la collectivité"> </a></td>
         </tr>
        </tbody>
       </table>
