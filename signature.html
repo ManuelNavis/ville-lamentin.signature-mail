@@ -25,7 +25,6 @@
     .copy-btn:hover { background: #00476f; }
     .preview-box { border: 1px dashed var(--border); border-radius: 14px; padding: 20px; background: #fff; overflow-x: auto; }
 
-    /* La page reste responsive, mais la signature conserve toujours sa taille d'origine. */
     #signature {
       width: 650px;
       min-width: 650px;
@@ -82,7 +81,7 @@
   </header>
   <main>
    <section class="card">
-    <h2 data-template-id="form-card-title" class="canva-text" style="color: rgb(0, 91, 143); font-weight: 700; font-style: normal; font-size: 22px;">Informations de l'agent</h2><label data-template-id="label-name" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Nom et prénom</label> <input id="name" type="text" placeholder="Ex : Manuel NAVIS"> <label data-template-id="label-job" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Fonction</label> <input id="job" type="text" placeholder="Ex : Technicien informatique"> <label data-template-id="label-service" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Service / Direction</label> <input id="service" type="text" placeholder="Ex : Direction Aménagement Numérique"> <label data-template-id="label-phone" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Téléphone fixe</label> <input id="phone" type="text" placeholder="Ex : 0590 00 00 00"> <label data-template-id="label-extension" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Numéro de poste</label> <input id="extension" type="text" placeholder="Ex : 1234"> <label data-template-id="label-mobile" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Téléphone mobile</label> <input id="mobile" type="text" placeholder="Ex : 0690 00 00 00"> <label data-template-id="label-email" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Email</label> <input id="email" type="email" placeholder="Ex : prenom.nom@ville-lamentin.fr"> <button data-template-id="copy-button" class="canva-button copy-btn" onclick="copySignature()" style="background: rgb(0, 91, 143); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Copier la signature</button>
+    <h2 data-template-id="form-card-title" class="canva-text" style="color: rgb(0, 91, 143); font-weight: 700; font-style: normal; font-size: 22px;">Informations de l'agent</h2><label data-template-id="label-name" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Prénom et NOM</label> <input id="name" type="text" placeholder="Ex : Léo MARÉCHAL"> <label data-template-id="label-job" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Fonction</label> <input id="job" type="text" placeholder="Ex : Technicien informatique"> <label data-template-id="label-service" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Service / Direction</label> <input id="service" type="text" placeholder="Ex : Direction Aménagement Numérique"> <label data-template-id="label-phone" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Téléphone fixe</label> <input id="phone" type="text" placeholder="Ex : 0590 00 00 00"> <label data-template-id="label-extension" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Numéro de poste</label> <input id="extension" type="text" placeholder="Ex : 1234"> <label data-template-id="label-mobile" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Téléphone mobile</label> <input id="mobile" type="text" placeholder="Ex : 0690 00 00 00"> <label data-template-id="label-email" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Email</label> <input id="email" type="email" placeholder="Ex : prenom.nom@ville-lamentin.fr"> <button data-template-id="copy-button" class="canva-button copy-btn" onclick="copySignature()" style="background: rgb(0, 91, 143); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Copier la signature</button>
     <h2 data-template-id="help-heading" class="canva-text" style="margin-top: 25px; font-size: 18px; color: rgb(0, 91, 143); font-weight: 700; font-style: normal;">Comment l'installer dans Gmail</h2>
     <ol style="padding-left:18px; margin:0;">
      <li data-template-id="help-step-1" class="canva-text" style="margin-bottom: 8px; line-height: 1.5; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 14px;">Ouvrez Gmail → Paramètres (⚙️) → Voir tous les paramètres → onglet « Général » → section « Signature ».</li>
@@ -110,7 +109,7 @@
           <div style="display:flex; gap:20px; align-items:flex-start;">
            <div style="flex:1; min-width:0;">
             <div style="font-size:20px; font-weight:700; color:#005b8f;" id="sigName">
-             Manuel NAVIS
+             Léo MARÉCHAL
             </div>
             <div style="font-size:14px; color:#111827; margin-top:4px; font-weight:600;" id="sigJob">
              Technicien informatique
@@ -201,7 +200,7 @@
     }
 
     function generateVCard() {
-      const name = document.getElementById("name").value.trim() || "Manuel NAVIS";
+      const name = document.getElementById("name").value.trim() || "Léo MARÉCHAL";
       const job = document.getElementById("job").value.trim() || "Technicien informatique";
       const service = document.getElementById("service").value.trim() || "Direction Aménagement Numérique";
       const phone = document.getElementById("phone").value.trim() || "0590 00 00 00";
