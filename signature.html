@@ -45,9 +45,9 @@
     }
 
     #qrcode-container {
-      width: 196px;
-      min-width: 196px;
-      min-height: 196px;
+      width: 136px;
+      min-width: 136px;
+      min-height: 136px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -58,8 +58,8 @@
     }
     #qrcode-container img {
       display: block;
-      width: 180px;
-      height: 180px;
+      width: 120px;
+      height: 120px;
       image-rendering: pixelated;
     }
     .toast { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #005b8f; color: #fff; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: bold; box-shadow: 0 6px 24px rgba(0,0,0,0.18); z-index: 9999; }
@@ -289,8 +289,8 @@
 
       new QRCode(temporaryContainer, {
         text: generateVCard().normalize("NFC"),
-        width: 180,
-        height: 180,
+        width: 120,
+        height: 120,
         colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.M
@@ -309,8 +309,8 @@
         return;
       }
 
-      finalImage.width = 180;
-      finalImage.height = 180;
+      finalImage.width = 120;
+      finalImage.height = 120;
       finalImage.alt = "QR code contenant les coordonnées de l’agent";
       finalImage.setAttribute("draggable", "false");
       container.appendChild(finalImage);
