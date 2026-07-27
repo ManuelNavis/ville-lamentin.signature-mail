@@ -362,9 +362,9 @@
     }
 
     #qrcode-container {
-      width: 128px;
-      height: 128px;
-      padding: 6px;
+      width: 116px;
+      height: 116px;
+      padding: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -376,8 +376,7 @@
     #qrcode-container img,
     #qrcode-container canvas {
       display: block;
-      width: 116px !important;
-      height: 116px !important;
+      image-rendering: pixelated;
     }
 
     .card-footer {
@@ -607,26 +606,6 @@
         .replace(/,/g, "\\,");
     }
 
-    function getUtf8Bytes(value) {
-      const normalized = normalizeUnicode(value);
-      if (typeof TextEncoder !== "undefined") {
-        return Array.from(new TextEncoder().encode(normalized));
-      }
-      return Array.from(unescape(encodeURIComponent(normalized)))
-        .map(character => character.charCodeAt(0));
-    }
-
-    function encodeQuotedPrintableUtf8(value) {
-      return getUtf8Bytes(escapeVCardValue(value))
-        .map(byte => {
-          if ((byte >= 33 && byte <= 60) || (byte >= 62 && byte <= 126)) {
-            return String.fromCharCode(byte);
-          }
-          return "=" + byte.toString(16).toUpperCase().padStart(2, "0");
-        })
-        .join("");
-    }
-
     function normalizePhone(value) {
       const phone = String(value || "").trim();
       const hasPlus = phone.startsWith("+");
@@ -649,34 +628,35 @@
       return values;
     }
 
-    function generateVCard(values) {
+    function escapeMeCardValue(value) {
+      return normalizeUnicode(value)
+        .replace(/\\/g, "\\\\")
+        .replace(/([:;,])/g, "\\$1")
+        .replace(/\r\n|\r|\n/g, " ");
+    }
+
+    function generateContactCode(values) {
       const { firstName, lastName } = splitFullName(values.name);
-      const lines = [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        "PRODID:-//Ville du Lamentin//Carte de visite//FR",
-        `N;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8(lastName)};${encodeQuotedPrintableUtf8(firstName)};;;`,
-        `FN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8(values.name)}`,
-        `ORG;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8("Ville du Lamentin")};${encodeQuotedPrintableUtf8(values.service)}`,
-        `TITLE;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8(values.job)}`
+      const fields = [
+        `N:${escapeMeCardValue(lastName)},${escapeMeCardValue(firstName)};`
       ];
 
       const phone = normalizePhone(values.phone);
       const mobile = normalizePhone(values.mobile);
 
-      if (phone) lines.push(`TEL;TYPE=WORK,VOICE:${phone}`);
-      if (mobile) lines.push(`TEL;TYPE=CELL,VOICE:${mobile}`);
-      if (values.extension) {
-        lines.push(`NOTE;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${encodeQuotedPrintableUtf8("Poste " + values.extension)}`);
-      }
-      if (values.email) lines.push(`EMAIL;TYPE=INTERNET:${escapeVCardValue(values.email)}`);
-      if (values.website) lines.push(`URL:https://${values.website.replace(/^https?:\/\//, "")}`);
-      if (values.address) {
-        lines.push(`ADR;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE;TYPE=WORK:;;${encodeQuotedPrintableUtf8(values.address)};;;;`);
+      if (phone) fields.push(`TEL:${phone};`);
+      if (mobile) fields.push(`TEL:${mobile};`);
+      if (values.email) fields.push(`EMAIL:${escapeMeCardValue(values.email)};`);
+      if (values.website) {
+        const website = "https://" + values.website.replace(/^https?:\/\//, "");
+        fields.push(`URL:${escapeMeCardValue(website)};`);
       }
 
-      lines.push("END:VCARD");
-      return lines.join("\r\n");
+      fields.push(`ORG:${escapeMeCardValue("Ville du Lamentin")};`);
+      if (values.job) fields.push(`NOTE:${escapeMeCardValue(values.job)};`);
+
+      // Le dernier point-virgule ferme la structure MECARD.
+      return "MECARD:" + fields.join("") + ";";
     }
 
     function setRowVisibility(rowId, visible) {
@@ -692,14 +672,58 @@
         return;
       }
 
-      new QRCode(container, {
-        text: generateVCard(values),
-        width: 116,
-        height: 116,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.M
-      });
+      try {
+        const content = generateContactCode(values).normalize("NFC");
+
+        // Première génération invisible pour connaître le nombre exact de modules.
+        const probeContainer = document.createElement("div");
+        const probe = new QRCode(probeContainer, {
+          text: content,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L
+        });
+
+        const moduleCount = probe._oQRCode && probe._oQRCode.getModuleCount
+          ? probe._oQRCode.getModuleCount()
+          : 49;
+
+        // Deux pixels entiers par module évitent le flou. Les 8 px de marge
+        // correspondent à la zone blanche de sécurité autour du QR code.
+        const qrSize = moduleCount * 2;
+        const containerSize = qrSize + 18;
+        container.style.width = containerSize + "px";
+        container.style.height = containerSize + "px";
+
+        new QRCode(container, {
+          text: content,
+          width: qrSize,
+          height: qrSize,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L
+        });
+
+        const image = container.querySelector("img");
+        const canvas = container.querySelector("canvas");
+        [image, canvas].forEach(element => {
+          if (!element) return;
+          element.style.width = qrSize + "px";
+          element.style.height = qrSize + "px";
+        });
+
+        if (image) {
+          image.alt = "QR code permettant d'enregistrer le contact";
+          image.setAttribute("draggable", "false");
+        }
+
+        if (!image && !canvas) throw new Error("Aucun QR code généré");
+      } catch (error) {
+        console.error("Erreur de génération du QR code :", error);
+        container.textContent = "QR indisponible";
+      }
     }
 
     function updatePreview() {
