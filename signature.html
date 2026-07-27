@@ -1,846 +1,422 @@
 <!doctype html>
-<html lang="fr">
-<head>
+<html lang="fr"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Générateur de carte de visite - Ville du Lamentin</title>
+  <title>Générateur de signature mail - QR corrigé</title>
   <link rel="icon" type="image/png" href="https://www.ville-lamentin.fr/local/cache-vignettes/L64xH64/logo_lamentin-transparent2-95ed3.png?1756998896">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <style>
     :root {
-      --blue: #005b8f;
-      --turquoise: #00a6a6;
-      --gold: #c9a84c;
-      --ink: #111827;
-      --muted: #667085;
-      --page: #f4f7fb;
-      --panel: #1a2238;
+      --primary: #005b8f;
+      --secondary: #00a6a6;
+      --light: #f4f7fb;
       --border: #d9e2ec;
     }
-
     * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--light); color: #333; }
+    main { max-width: 1200px; margin: 30px auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    .card { background: #fff; border-radius: 18px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .card h2 { margin-top: 0; color: var(--primary); font-size: 22px; }
+    label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
+    input { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; }
+    input:focus { outline: none; border-color: var(--secondary); }
+    .copy-btn { width: 100%; margin-top: 40px; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .copy-btn:hover { background: #00476f; }
+    .preview-box { border: 1px dashed var(--border); border-radius: 14px; padding: 20px; background: #fff; overflow-x: auto; }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "DM Sans", Arial, sans-serif;
-      background: var(--page);
-      color: #1f2937;
+    #signature {
+      width: 650px;
+      min-width: 650px;
+      max-width: none;
     }
 
-    header {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 22px 30px;
-      background: linear-gradient(135deg, var(--blue), var(--turquoise));
-      color: #fff;
-    }
-
-    header img {
-      width: 68px;
-      height: 68px;
-      object-fit: contain;
-      display: block;
-      padding: 8px;
-      border-radius: 14px;
-      background: #fff;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 800;
-    }
-
-    header p {
-      margin: 5px 0 0;
-      font-size: 15px;
-      opacity: .94;
-    }
-
-    main {
-      width: min(1420px, calc(100% - 32px));
-      margin: 28px auto;
-      display: grid;
-      grid-template-columns: minmax(320px, 440px) minmax(0, 1fr);
-      gap: 24px;
-      align-items: start;
-    }
-
-    .panel {
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 12px 34px rgba(15, 23, 42, .11);
-    }
-
-    .form-panel {
-      background: var(--panel);
-      color: #fff;
-    }
-
-    .preview-panel {
-      background: #fff;
-      min-width: 0;
-    }
-
-    .panel h2 {
-      margin: 0 0 20px;
-      font-size: 20px;
-    }
-
-    .form-panel h2 { color: var(--gold); }
-    .preview-panel h2 { color: var(--blue); }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .field.full { grid-column: 1 / -1; }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      color: #aeb8ca;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    input {
-      width: 100%;
-      height: 43px;
-      border: 1px solid #475569;
-      border-radius: 10px;
-      padding: 0 12px;
-      background: rgba(15, 23, 42, .52);
-      color: #fff;
-      font: inherit;
-      font-size: 14px;
-      outline: none;
-    }
-
-    input::placeholder { color: #778398; }
-
-    input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(201, 168, 76, .16);
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    button {
-      min-height: 45px;
-      border: 0;
-      border-radius: 11px;
-      padding: 11px 14px;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--gold);
-      color: #111827;
-    }
-
-    .btn-secondary {
-      background: #3b82f6;
-      color: #fff;
-    }
-
-    .btn-reset {
-      grid-column: 1 / -1;
-      background: transparent;
-      color: #cbd5e1;
-      border: 1px solid #526078;
-    }
-
-    button:hover { filter: brightness(.96); }
-
-    .size-note {
-      margin: -10px 0 18px;
-      color: #667085;
-      font-size: 13px;
-    }
-
-    .card-scroll {
-      max-width: 100%;
-      overflow-x: auto;
-      padding: 20px;
-      border: 1px dashed var(--border);
-      border-radius: 15px;
-      background: #edf2f7;
-    }
-
-    /* Format fixe : 85 × 55 mm, affiché à 850 × 550 px. */
-    #business-card {
-      position: relative;
-      width: 850px;
-      min-width: 850px;
-      height: 550px;
-      overflow: hidden;
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: 0 15px 35px rgba(15, 23, 42, .20);
-      font-family: "DM Sans", Arial, sans-serif;
-    }
-
-    .card-layout {
-      width: 100%;
-      height: 100%;
-      border-collapse: collapse;
+    #signature > table {
+      width: 650px;
+      min-width: 650px;
+      max-width: none !important;
       table-layout: fixed;
     }
 
-    .brand-column {
-      position: relative;
-      width: 275px;
-      padding: 38px;
-      text-align: center;
-      vertical-align: middle;
-      background: linear-gradient(150deg, var(--blue), var(--turquoise));
-    }
-
-    .brand-column::after {
-      content: "";
-      position: absolute;
-      width: 190px;
-      height: 190px;
-      right: -75px;
-      bottom: -78px;
-      border-radius: 50%;
-      border: 30px solid rgba(255,255,255,.09);
-    }
-
-    .logo-shell {
-      position: relative;
-      z-index: 1;
-      width: 180px;
-      min-height: 180px;
-      margin: 0 auto;
-      padding: 22px;
-      border-radius: 28px;
-      background: #fff;
-      box-shadow: 0 12px 28px rgba(0, 40, 65, .22);
-    }
-
-    .logo-shell img {
-      display: block;
-      width: 136px;
-      height: 136px;
-      object-fit: contain;
-      margin: auto;
-      background: #fff;
-    }
-
-    .brand-label {
-      position: relative;
-      z-index: 1;
-      margin-top: 28px;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    .brand-location {
-      position: relative;
-      z-index: 1;
-      margin-top: 7px;
-      color: rgba(255,255,255,.82);
-      font-size: 13px;
-      letter-spacing: .08em;
-    }
-
-    .details-column {
-      position: relative;
-      padding: 44px 40px 36px 46px;
-      vertical-align: top;
-      background: #fff;
-    }
-
-    .details-column::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      height: 12px;
-      background: linear-gradient(90deg, var(--turquoise), var(--blue));
-      border-radius: 0 28px 0 16px;
-    }
-
-    .identity {
-      padding-right: 155px;
-    }
-
-    #card-name {
-      color: var(--blue);
-      font-size: 31px;
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -.02em;
-    }
-
-    #card-job {
-      margin-top: 7px;
-      color: var(--ink);
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    #card-service {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 500;
-    }
-
-    .accent-line {
-      width: 92px;
-      height: 4px;
-      margin: 21px 0 19px;
-      border-radius: 20px;
-      background: var(--turquoise);
-    }
-
-    .contact-table {
-      border-collapse: collapse;
-      color: #344054;
-      font-size: 15px;
-      line-height: 1.42;
-    }
-
-    .contact-table td {
-      padding: 4px 0;
-      vertical-align: top;
-    }
-
-    .contact-table .icon {
-      width: 29px;
-      padding-right: 10px;
-      color: var(--blue);
-      font-weight: 800;
-    }
-
-    .contact-table a {
-      color: #344054;
-      text-decoration: none;
-    }
-
-    .qr-zone {
-      position: absolute;
-      top: 43px;
-      right: 38px;
-      width: 134px;
-      text-align: center;
-    }
-
-    .qr-title {
-      margin-bottom: 8px;
-      color: #667085;
-      font-size: 10px;
-      font-weight: 800;
-      line-height: 1.25;
-      text-transform: uppercase;
-      letter-spacing: .06em;
+    #signature .signature-banner {
+      width: 650px !important;
+      min-width: 650px !important;
+      max-width: none !important;
     }
 
     #qrcode-container {
-      width: 116px;
-      height: 116px;
-      padding: 8px;
+      width: 120px;
+      min-width: 120px;
+      min-height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #e4e7ec;
-      border-radius: 15px;
       background: #fff;
+      padding: 2px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
     }
-
-    #qrcode-container img,
-    #qrcode-container canvas {
+    #qrcode-container img {
       display: block;
+      width: auto;
+      height: auto;
+      max-width: 114px;
       image-rendering: pixelated;
     }
-
-    .card-footer {
-      position: absolute;
-      right: 40px;
-      bottom: 28px;
-      left: 321px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding-top: 13px;
-      border-top: 1px solid #e4e7ec;
-      color: #667085;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .footer-tag {
-      padding: 7px 12px;
-      border-radius: 20px;
-      color: var(--blue);
-      background: #f0f9ff;
-      font-weight: 800;
-    }
-
-    .toast {
-      display: none;
-      position: fixed;
-      left: 50%;
-      bottom: 28px;
-      z-index: 9999;
-      transform: translateX(-50%);
-      padding: 13px 22px;
-      border-radius: 11px;
-      color: #fff;
-      background: #101828;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      font-size: 14px;
-      font-weight: 700;
-    }
-
+    .toast { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #005b8f; color: #fff; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: bold; box-shadow: 0 6px 24px rgba(0,0,0,0.18); z-index: 9999; }
     .toast.show { display: block; }
-
-    @media (max-width: 980px) {
-      main { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      header { padding: 18px; }
-      header h1 { font-size: 22px; }
-      header img { width: 58px; height: 58px; }
-      main { width: min(100% - 20px, 1420px); margin-top: 16px; }
-      .panel { padding: 18px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .field.full { grid-column: auto; }
-      .actions { grid-template-columns: 1fr; }
-      .btn-reset { grid-column: auto; }
-      .card-scroll { padding: 12px; }
-    }
+    @media (max-width: 850px) { main { grid-template-columns: 1fr; } }
   </style>
-</head>
-<body>
-  <header>
-    <a href="./index.html" aria-label="Retour à l'accueil">
-      <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo Ville du Lamentin">
-    </a>
-    <div>
-      <h1>Générateur de carte de visite</h1>
-      <p>Créez une carte professionnelle au format 85 × 55 mm.</p>
-    </div>
+  
+  
+  
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" style="background: rgb(244, 247, 251);">
+  <header data-template-id="page-header" class="canva-header" style="display: flex; align-items: center; gap: 20px; padding: 20px 30px; background: linear-gradient(135deg, rgb(0, 91, 143), rgb(0, 166, 166));">
+   <a href="./index.html" style="flex-shrink:0;"> <img data-template-id="top-logo" class="canva-image" loading="lazy" style="height:64px; width:auto; border-radius:14px; background:#fff; padding:8px; display:block;" src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo Ville du Lamentin"> </a>
+   <div style="flex:1;">
+    <h1 data-template-id="header-title" class="canva-text" style="margin: 0px; font-size: 28px; color: rgb(255, 255, 255); font-weight: 700; font-style: normal;">Générateur de signature mail</h1>
+    <p data-template-id="header-subtitle" class="canva-text" style="margin-top: 6px; font-size: 15px; opacity: 0.95; color: rgb(255, 255, 255); font-weight: 400; font-style: normal;">Créez votre signature officielle en quelques secondes</p>
+   </div>
   </header>
-
   <main>
-    <section class="panel form-panel">
-      <h2>Informations de l’agent</h2>
-
-      <form id="card-form" class="form-grid" onsubmit="event.preventDefault()">
-        <div class="field full">
-          <label for="name">Prénom et nom</label>
-          <input id="name" type="text" value="Léo MARÉCHAL" placeholder="Ex : Léo MARÉCHAL">
-        </div>
-
-        <div class="field full">
-          <label for="job">Fonction</label>
-          <input id="job" type="text" value="Technicien informatique" placeholder="Ex : Technicien informatique">
-        </div>
-
-        <div class="field full">
-          <label for="service">Service / Direction</label>
-          <input id="service" type="text" value="Direction Aménagement Numérique" placeholder="Ex : Direction Aménagement Numérique">
-        </div>
-
-        <div class="field">
-          <label for="phone">Téléphone fixe</label>
-          <input id="phone" type="text" value="0590 00 00 00" placeholder="Ex : 0590 00 00 00">
-        </div>
-
-        <div class="field">
-          <label for="extension">Numéro de poste</label>
-          <input id="extension" type="text" placeholder="Facultatif">
-        </div>
-
-        <div class="field full">
-          <label for="mobile">Téléphone mobile</label>
-          <input id="mobile" type="text" placeholder="Facultatif">
-        </div>
-
-        <div class="field full">
-          <label for="email">Adresse e-mail</label>
-          <input id="email" type="email" value="prenom.nom@ville-lamentin.fr" placeholder="prenom.nom@ville-lamentin.fr">
-        </div>
-
-        <div class="field full">
-          <label for="website">Site internet</label>
-          <input id="website" type="text" value="www.ville-lamentin.fr" placeholder="www.ville-lamentin.fr">
-        </div>
-
-        <div class="field full">
-          <label for="address">Adresse</label>
-          <input id="address" type="text" value="Rue de la République, 97129 Lamentin" placeholder="Adresse professionnelle">
-        </div>
-      </form>
-
-      <div class="actions">
-        <button type="button" class="btn-primary" onclick="downloadPNG()">Télécharger en PNG</button>
-        <button type="button" class="btn-secondary" onclick="downloadPDF()">Télécharger en PDF</button>
-        <button type="button" class="btn-reset" onclick="resetForm()">Réinitialiser les informations</button>
-      </div>
-    </section>
-
-    <section class="panel preview-panel">
-      <h2>Aperçu de la carte</h2>
-      <p class="size-note">La carte conserve son format fixe. Faites défiler horizontalement sur un petit écran.</p>
-
-      <div class="card-scroll">
-        <div id="business-card">
-          <table class="card-layout" cellpadding="0" cellspacing="0" border="0">
+   <section class="card">
+    <h2 data-template-id="form-card-title" class="canva-text" style="color: rgb(0, 91, 143); font-weight: 700; font-style: normal; font-size: 22px;">Informations de l'agent</h2><label data-template-id="label-name" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Prénom et NOM</label> <input id="name" type="text" placeholder="Ex : Léo MARÉCHAL"> <label data-template-id="label-job" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Fonction</label> <input id="job" type="text" placeholder="Ex : Technicien informatique"> <label data-template-id="label-service" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Service / Direction</label> <input id="service" type="text" placeholder="Ex : Direction Aménagement Numérique"> <label data-template-id="label-phone" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Téléphone fixe</label> <input id="phone" type="text" placeholder="Ex : 0590 00 00 00"> <label data-template-id="label-extension" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Numéro de poste</label> <input id="extension" type="text" placeholder="Ex : 1234"> <label data-template-id="label-mobile" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Téléphone mobile</label> <input id="mobile" type="text" placeholder="Ex : 0690 00 00 00"> <label data-template-id="label-email" class="canva-text" style="color: rgb(51, 51, 51); font-weight: 700; font-style: normal; font-size: 14px;">Email</label> <input id="email" type="email" placeholder="Ex : prenom.nom@ville-lamentin.fr"> <button data-template-id="copy-button" class="canva-button copy-btn" onclick="copySignature()" style="background: rgb(0, 91, 143); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Copier la signature</button>
+    <h2 data-template-id="help-heading" class="canva-text" style="margin-top: 25px; font-size: 18px; color: rgb(0, 91, 143); font-weight: 700; font-style: normal;">Comment l'installer dans Gmail</h2>
+    <ol style="padding-left:18px; margin:0;">
+     <li data-template-id="help-step-1" class="canva-text" style="margin-bottom: 8px; line-height: 1.5; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 14px;">Ouvrez Gmail → Paramètres (⚙️) → Voir tous les paramètres → onglet « Général » → section « Signature ».</li>
+     <li data-template-id="help-step-2" class="canva-text" style="margin-bottom: 8px; line-height: 1.5; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 14px;">Cliquez « Copier la signature » ci-dessus, puis collez directement dans le champ signature de Gmail (Ctrl+V / Cmd+V).</li>
+     <li data-template-id="help-step-3" class="canva-text" style="line-height: 1.5; color: rgb(107, 114, 128); font-weight: 400; font-style: normal; font-size: 14px;">Enregistrez les modifications en bas de page. Votre nouvelle signature apparaîtra dans tous vos prochains emails !</li>
+    </ol>
+   </section>
+   <section class="card">
+    <h2 data-template-id="preview-card-title" class="canva-text" style="color: rgb(0, 91, 143); font-weight: 700; font-style: normal; font-size: 22px;">Aperçu de la signature</h2>
+    <div class="preview-box">
+     <div id="signature">
+      <table cellpadding="0" cellspacing="0" width="650" style="font-family:Arial,Helvetica,sans-serif; width:650px; min-width:650px; max-width:none; background:#fff; table-layout:fixed;">
+       <tbody>
+        <tr>
+         <td style="width:130px; padding:18px; background:linear-gradient(135deg,#005b8f,#00a6a6); text-align:center; border-radius:18px 0 0 18px;">
+          <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:auto;">
             <tr>
-              <td class="brand-column">
-                <div class="logo-shell">
-                  <img src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo Ville du Lamentin">
-                </div>
-                <div class="brand-label">Ville du Lamentin</div>
-                <div class="brand-location">Guadeloupe</div>
-              </td>
-
-              <td class="details-column">
-                <div class="identity">
-                  <div id="card-name">Léo MARÉCHAL</div>
-                  <div id="card-job">Technicien informatique</div>
-                  <div id="card-service">Direction Aménagement Numérique</div>
-                </div>
-
-                <div class="accent-line"></div>
-
-                <table class="contact-table" cellpadding="0" cellspacing="0" border="0">
-                  <tr id="phone-row">
-                    <td class="icon">T</td>
-                    <td id="card-phone">0590 00 00 00</td>
-                  </tr>
-                  <tr id="extension-row" style="display:none;">
-                    <td class="icon">P</td>
-                    <td id="card-extension"></td>
-                  </tr>
-                  <tr id="mobile-row" style="display:none;">
-                    <td class="icon">M</td>
-                    <td id="card-mobile"></td>
-                  </tr>
-                  <tr id="email-row">
-                    <td class="icon">@</td>
-                    <td><a id="card-email" href="mailto:prenom.nom@ville-lamentin.fr">prenom.nom@ville-lamentin.fr</a></td>
-                  </tr>
-                  <tr id="website-row">
-                    <td class="icon">W</td>
-                    <td><a id="card-website" href="https://www.ville-lamentin.fr">www.ville-lamentin.fr</a></td>
-                  </tr>
-                  <tr id="address-row">
-                    <td class="icon">A</td>
-                    <td id="card-address">Rue de la République, 97129 Lamentin</td>
-                  </tr>
-                </table>
-
-                <div class="qr-zone">
-                  <div class="qr-title">Scannez pour enregistrer le contact</div>
-                  <div id="qrcode-container" aria-label="QR code de la fiche contact"></div>
-                </div>
+              <td style="background:#ffffff; border-radius:14px; padding:8px; text-align:center;">
+                <img data-template-id="logo-lamentin" class="canva-image" width="88" loading="lazy" style="display:block; margin:auto;" src="https://cdn.jsdelivr.net/gh/ManuelNavis/ville-lamentin.signature-mail/LOGO%20LAMENTIN%20sine%20L%20(3)%20(1)-2.png" alt="Logo Ville du Lamentin">
               </td>
             </tr>
           </table>
-
-          <div class="card-footer">
-            <span id="footer-website">www.ville-lamentin.fr</span>
-            <span class="footer-tag">Service public de proximité</span>
-          </div>
-        </div>
-      </div>
-    </section>
+         </td>
+         <td style="padding:18px 22px; border:1px solid #e5e7eb; border-left:none; border-radius:0 18px 18px 0;">
+          <div style="display:flex; gap:20px; align-items:flex-start;">
+           <div style="flex:1; min-width:0;">
+            <div style="font-size:20px; font-weight:700; color:#005b8f;" id="sigName">
+             Léo MARÉCHAL
+            </div>
+            <div style="font-size:14px; color:#111827; margin-top:4px; font-weight:600;" id="sigJob">
+             Technicien informatique
+            </div>
+            <div style="font-size:13px; color:#6b7280; margin-top:3px;" id="sigService">
+             Direction Aménagement Numérique
+            </div>
+            <div style="height:2px; width:70px; background:#00a6a6; margin:12px 0;"></div>
+            <table cellpadding="0" cellspacing="0" style="font-size:13px; color:#374151; line-height:1.7;">
+             <tbody>
+              <tr>
+               <td style="padding-right:8px;">☎</td>
+               <td id="sigPhone">0590 00 00 00</td>
+              </tr>
+              <tr id="extensionRow">
+               <td style="padding-right:8px;">📞</td>
+               <td id="sigExtension">1234</td>
+              </tr>
+              <tr id="mobileRow">
+               <td style="padding-right:8px;">📱</td>
+               <td id="sigMobile">0690 00 00 00</td>
+              </tr>
+              <tr>
+               <td style="padding-right:8px;">✉</td>
+               <td><a href="mailto:prenom.nom@ville-lamentin.fr" id="sigEmail" style="color:#005b8f; text-decoration:none;">prenom.nom@ville-lamentin.fr</a></td>
+              </tr>
+              <tr>
+               <td style="padding-right:8px;">🌐</td>
+               <td><a href="https://www.ville-lamentin.fr" target="_blank" rel="noopener noreferrer" style="color:#005b8f; text-decoration:none;">www.ville-lamentin.fr</a></td>
+              </tr>
+             </tbody>
+            </table>
+            <div data-template-id="sig-pill" class="canva-text" style="margin-top: 12px; padding: 8px 12px; background: rgb(240, 249, 255); border-radius: 20px; display: inline-block; font-size: 12px; color: rgb(0, 91, 143); font-weight: 700; font-style: normal;">Ville du Lamentin · Guadeloupe</div>
+           </div>
+           <div style="display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0;">
+            <div style="font-size:11px; color:#6b7280; font-weight:600; text-align:center;">
+             Scannez pour enregistrer le contact
+            </div>
+            <div id="qrcode-container" aria-label="QR code de la fiche contact"></div>
+           </div>
+          </div></td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </section>
   </main>
-
   <div class="toast" id="toast"></div>
-
   <script>
-    const defaults = {
-      name: "Léo MARÉCHAL",
-      job: "Technicien informatique",
-      service: "Direction Aménagement Numérique",
-      phone: "0590 00 00 00",
-      extension: "",
-      mobile: "",
-      email: "prenom.nom@ville-lamentin.fr",
-      website: "www.ville-lamentin.fr",
-      address: "Rue de la République, 97129 Lamentin"
+    const fields = {
+      name: "sigName",
+      job: "sigJob",
+      service: "sigService",
+      phone: "sigPhone",
+      mobile: "sigMobile",
+      extension: "sigExtension",
+      email: "sigEmail"
     };
 
-    const fieldIds = Object.keys(defaults);
+    const QR_MODULE_SCALE = 2;
+    const QR_QUIET_ZONE = 4;
+    const QR_MAX_SIZE = 114;
 
     function normalizeUnicode(value) {
-      return String(value || "").normalize("NFC").replace(/\u0000/g, "");
+      return String(value || "")
+        .normalize("NFC")
+        .replace(/\u0000/g, "")
+        .trim();
     }
 
-    function escapeVCardValue(value) {
+    function escapeMeCardValue(value) {
       return normalizeUnicode(value)
         .replace(/\\/g, "\\\\")
         .replace(/\r\n|\r|\n/g, "\\n")
+        .replace(/:/g, "\\:")
         .replace(/;/g, "\\;")
         .replace(/,/g, "\\,");
     }
 
     function normalizePhone(value) {
-      const phone = String(value || "").trim();
+      const phone = normalizeUnicode(value);
       const hasPlus = phone.startsWith("+");
       const digits = phone.replace(/\D/g, "");
       return (hasPlus ? "+" : "") + digits;
     }
 
     function splitFullName(fullName) {
-      const parts = normalizeUnicode(fullName).trim().split(/\s+/).filter(Boolean);
-      if (parts.length <= 1) return { firstName: parts[0] || "", lastName: "" };
-      const lastName = parts.pop();
-      return { firstName: parts.join(" "), lastName };
-    }
+      const parts = normalizeUnicode(fullName).split(/\s+/).filter(Boolean);
 
-    function getValues() {
-      const values = {};
-      fieldIds.forEach(id => {
-        values[id] = document.getElementById(id).value.trim();
+      if (parts.length <= 1) {
+        return { firstName: parts[0] || "", lastName: "" };
+      }
+
+      const firstUppercaseIndex = parts.findIndex((part, index) => {
+        if (index === 0) return false;
+        const letters = part.replace(/[^\p{L}]/gu, "");
+        return letters && letters === letters.toLocaleUpperCase("fr-FR");
       });
-      return values;
+
+      if (firstUppercaseIndex > 0) {
+        return {
+          firstName: parts.slice(0, firstUppercaseIndex).join(" "),
+          lastName: parts.slice(firstUppercaseIndex).join(" ")
+        };
+      }
+
+      return {
+        firstName: parts.slice(0, -1).join(" "),
+        lastName: parts[parts.length - 1]
+      };
     }
 
-    function escapeVCardText(value) {
-      return normalizeUnicode(value)
-        .replace(/\\/g, "\\\\")
-        .replace(/\r\n|\r|\n/g, "\\n")
-        .replace(/;/g, "\\;")
-        .replace(/,/g, "\\,");
+    function getFormValues() {
+      return {
+        name: normalizeUnicode(document.getElementById("name").value) || "Léo MARÉCHAL",
+        job: normalizeUnicode(document.getElementById("job").value) || "Technicien informatique",
+        service: normalizeUnicode(document.getElementById("service").value) || "Direction Aménagement Numérique",
+        phone: normalizeUnicode(document.getElementById("phone").value) || "0590 00 00 00",
+        mobile: normalizeUnicode(document.getElementById("mobile").value),
+        extension: normalizeUnicode(document.getElementById("extension").value),
+        email: normalizeUnicode(document.getElementById("email").value) || "prenom.nom@ville-lamentin.fr"
+      };
     }
 
-    function generateContactCode(values) {
-      const { firstName, lastName } = splitFullName(values.name);
-      const phone = normalizePhone(values.phone);
-      const mobile = normalizePhone(values.mobile);
-      const website = values.website
-        ? "https://" + values.website.replace(/^https?:\/\//, "")
-        : "";
+    function generateMeCard(compactMode = false) {
+      const { name, job, service, phone, mobile, extension, email } = getFormValues();
+      const { firstName, lastName } = splitFullName(name);
+      const entries = [];
 
-      // vCard 3.0 explicitement encodée en UTF-8 : meilleure compatibilité
-      // avec les accents, apostrophes, cédilles et autres caractères spéciaux.
-      const lines = [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        `N;CHARSET=UTF-8:${escapeVCardText(lastName)};${escapeVCardText(firstName)};;;`,
-        `FN;CHARSET=UTF-8:${escapeVCardText(values.name)}`,
-        "ORG;CHARSET=UTF-8:Ville du Lamentin"
-      ];
+      entries.push(`N:${escapeMeCardValue(lastName)},${escapeMeCardValue(firstName)}`);
 
-      if (values.job) {
-        lines.push(`TITLE;CHARSET=UTF-8:${escapeVCardText(values.job)}`);
-      }
-      if (phone) {
-        lines.push(`TEL;TYPE=WORK,VOICE:${phone}`);
-      }
-      if (mobile) {
-        lines.push(`TEL;TYPE=CELL,VOICE:${mobile}`);
-      }
-      if (values.email) {
-        lines.push(`EMAIL;TYPE=INTERNET,WORK:${escapeVCardText(values.email)}`);
-      }
-      if (website) {
-        lines.push(`URL:${escapeVCardText(website)}`);
+      const workPhone = normalizePhone(phone);
+      if (workPhone) {
+        entries.push(`TEL:${workPhone}`);
       }
 
-      lines.push("END:VCARD");
+      const mobilePhone = normalizePhone(mobile);
+      if (mobilePhone) {
+        entries.push(`TEL:${mobilePhone}`);
+      }
 
-      // Le format vCard exige des retours de ligne CRLF.
-      return lines.join("\r\n");
+      if (email) {
+        entries.push(`EMAIL:${escapeMeCardValue(email)}`);
+      }
+
+      if (!compactMode) {
+        const noteParts = [job, service];
+
+        if (extension) {
+          noteParts.push("Poste " + extension);
+        }
+
+        const note = noteParts.filter(Boolean).join(" | ");
+        if (note) {
+          entries.push(`NOTE:${escapeMeCardValue(note)}`);
+        }
+      }
+
+      // QRCode.js encode directement cette chaîne Unicode en UTF-8.
+      // Les accents, cédilles, apostrophes et autres caractères spéciaux
+      // sont donc conservés sans utiliser le quoted-printable.
+      return (`MECARD:${entries.join(";")};;`).normalize("NFC");
     }
 
-    function setRowVisibility(rowId, visible) {
-      document.getElementById(rowId).style.display = visible ? "table-row" : "none";
+    function createQrImage(text, enforceMaximumSize = true) {
+      const temporaryContainer = document.createElement("div");
+
+      const qrCode = new QRCode(temporaryContainer, {
+        text,
+        width: 256,
+        height: 256,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L
+      });
+
+      const qrModel = qrCode._oQRCode;
+      if (!qrModel || typeof qrModel.getModuleCount !== "function") {
+        throw new Error("Matrice QR indisponible");
+      }
+
+      const moduleCount = qrModel.getModuleCount();
+      const finalSize =
+        (moduleCount + (QR_QUIET_ZONE * 2)) * QR_MODULE_SCALE;
+
+      if (enforceMaximumSize && finalSize > QR_MAX_SIZE) {
+        throw new Error("QR trop dense pour la taille demandée");
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = finalSize;
+      canvas.height = finalSize;
+
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, finalSize, finalSize);
+      context.fillStyle = "#000000";
+
+      for (let row = 0; row < moduleCount; row++) {
+        for (let column = 0; column < moduleCount; column++) {
+          if (qrModel.isDark(row, column)) {
+            context.fillRect(
+              (column + QR_QUIET_ZONE) * QR_MODULE_SCALE,
+              (row + QR_QUIET_ZONE) * QR_MODULE_SCALE,
+              QR_MODULE_SCALE,
+              QR_MODULE_SCALE
+            );
+          }
+        }
+      }
+
+      const finalImage = document.createElement("img");
+      finalImage.src = canvas.toDataURL("image/png");
+      finalImage.width = finalSize;
+      finalImage.height = finalSize;
+      finalImage.alt = "QR code contenant les coordonnées de l’agent";
+      finalImage.setAttribute("draggable", "false");
+
+      return finalImage;
     }
 
-    function updateQRCode(values) {
+    function updateQRCode() {
       const container = document.getElementById("qrcode-container");
       container.innerHTML = "";
 
       if (typeof QRCode === "undefined") {
-        container.textContent = "QR indisponible";
+        container.textContent = "QR code indisponible";
         return;
       }
 
       try {
-        const content = generateContactCode(values).normalize("NFC");
+        container.appendChild(createQrImage(generateMeCard(false)));
+      } catch (fullCardError) {
+        try {
+          container.appendChild(createQrImage(generateMeCard(true)));
+        } catch (compactCardError) {
+          console.error(fullCardError, compactCardError);
 
-        // Première génération invisible pour connaître le nombre exact de modules.
-        const probeContainer = document.createElement("div");
-        const probe = new QRCode(probeContainer, {
-          text: content,
-          width: 256,
-          height: 256,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.L
-        });
+          try {
+            container.appendChild(
+              createQrImage(generateMeCard(true), false)
+            );
+          } catch (finalError) {
+            console.error(finalError);
+            container.textContent = "Informations trop longues";
+          }
+        }
+      }
+    }
 
-        const moduleCount = probe._oQRCode && probe._oQRCode.getModuleCount
-          ? probe._oQRCode.getModuleCount()
-          : 49;
+    Object.keys(fields).forEach(field => {
+      const el = document.getElementById(field);
+      if (!el) return;
 
-        // Deux pixels entiers par module évitent le flou. Les 8 px de marge
-        // correspondent à la zone blanche de sécurité autour du QR code.
-        const qrSize = moduleCount * 2;
-        const containerSize = qrSize + 18;
-        container.style.width = containerSize + "px";
-        container.style.height = containerSize + "px";
+      el.addEventListener("input", function() {
+        const sigEl = document.getElementById(fields[field]);
+        const val = this.value || this.placeholder.replace("Ex : ", "");
 
-        new QRCode(container, {
-          text: content,
-          width: qrSize,
-          height: qrSize,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.L
-        });
+        sigEl.textContent = val;
 
-        const image = container.querySelector("img");
-        const canvas = container.querySelector("canvas");
-        [image, canvas].forEach(element => {
-          if (!element) return;
-          element.style.width = qrSize + "px";
-          element.style.height = qrSize + "px";
-        });
-
-        if (image) {
-          image.alt = "QR code permettant d'enregistrer le contact";
-          image.setAttribute("draggable", "false");
+        if (field === "email") {
+          sigEl.href = "mailto:" + val;
         }
 
-        if (!image && !canvas) throw new Error("Aucun QR code généré");
-      } catch (error) {
-        console.error("Erreur de génération du QR code :", error);
-        container.textContent = "QR indisponible";
-      }
-    }
+        if (field === "mobile") {
+          document.getElementById("mobileRow").style.display =
+            this.value.trim() ? "table-row" : "none";
+        }
 
-    function updatePreview() {
-      const values = getValues();
+        if (field === "extension") {
+          document.getElementById("extensionRow").style.display =
+            this.value.trim() ? "table-row" : "none";
+        }
 
-      document.getElementById("card-name").textContent = values.name || defaults.name;
-      document.getElementById("card-job").textContent = values.job || defaults.job;
-      document.getElementById("card-service").textContent = values.service || defaults.service;
-
-      document.getElementById("card-phone").textContent = values.phone;
-      document.getElementById("card-extension").textContent = values.extension ? "Poste " + values.extension : "";
-      document.getElementById("card-mobile").textContent = values.mobile;
-      document.getElementById("card-address").textContent = values.address;
-
-      const emailLink = document.getElementById("card-email");
-      emailLink.textContent = values.email;
-      emailLink.href = values.email ? "mailto:" + values.email : "#";
-
-      const websiteLink = document.getElementById("card-website");
-      websiteLink.textContent = values.website;
-      websiteLink.href = values.website ? "https://" + values.website.replace(/^https?:\/\//, "") : "#";
-
-      document.getElementById("footer-website").textContent = values.website || "Ville du Lamentin";
-
-      setRowVisibility("phone-row", Boolean(values.phone));
-      setRowVisibility("extension-row", Boolean(values.extension));
-      setRowVisibility("mobile-row", Boolean(values.mobile));
-      setRowVisibility("email-row", Boolean(values.email));
-      setRowVisibility("website-row", Boolean(values.website));
-      setRowVisibility("address-row", Boolean(values.address));
-
-      updateQRCode(values);
-    }
-
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(window.toastTimer);
-      window.toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
-    }
-
-    async function renderCardCanvas() {
-      return html2canvas(document.getElementById("business-card"), {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        width: 850,
-        height: 550,
-        windowWidth: 1200
+        updateQRCode();
       });
-    }
-
-    async function downloadPNG() {
-      try {
-        const canvas = await renderCardCanvas();
-        const link = document.createElement("a");
-        link.download = "carte-de-visite-ville-lamentin.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        showToast("Carte téléchargée en PNG.");
-      } catch (error) {
-        console.error(error);
-        showToast("Impossible de générer le PNG.");
-      }
-    }
-
-    async function downloadPDF() {
-      try {
-        const canvas = await renderCardCanvas();
-        const image = canvas.toDataURL("image/png");
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-          orientation: "landscape",
-          unit: "mm",
-          format: [85, 55],
-          compress: true
-        });
-        pdf.addImage(image, "PNG", 0, 0, 85, 55, undefined, "FAST");
-        pdf.save("carte-de-visite-ville-lamentin.pdf");
-        showToast("Carte téléchargée en PDF au format 85 × 55 mm.");
-      } catch (error) {
-        console.error(error);
-        showToast("Impossible de générer le PDF.");
-      }
-    }
-
-    function resetForm() {
-      fieldIds.forEach(id => {
-        document.getElementById(id).value = defaults[id];
-      });
-      updatePreview();
-      showToast("Informations réinitialisées.");
-    }
-
-    fieldIds.forEach(id => {
-      document.getElementById(id).addEventListener("input", updatePreview);
     });
 
-    window.addEventListener("DOMContentLoaded", updatePreview);
+    window.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("mobileRow").style.display = "none";
+      document.getElementById("extensionRow").style.display = "none";
+      updateQRCode();
+    });
+
+    function copySignature() {
+      const sig = document.getElementById("signature");
+      const range = document.createRange();
+      range.selectNode(sig);
+
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      const copied = document.execCommand("copy");
+      sel.removeAllRanges();
+
+      const toast = document.getElementById("toast");
+      toast.textContent = copied
+        ? "Signature copiée ! Collez-la dans Gmail (Ctrl+V / Cmd+V)."
+        : "La copie automatique a échoué. Sélectionnez la signature puis copiez-la manuellement.";
+
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
   </script>
-</body>
-</html>
+  
+ 
+</body></html>
