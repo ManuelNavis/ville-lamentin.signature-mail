@@ -628,35 +628,52 @@
       return values;
     }
 
-    function escapeMeCardValue(value) {
+    function escapeVCardText(value) {
       return normalizeUnicode(value)
         .replace(/\\/g, "\\\\")
-        .replace(/([:;,])/g, "\\$1")
-        .replace(/\r\n|\r|\n/g, " ");
+        .replace(/\r\n|\r|\n/g, "\\n")
+        .replace(/;/g, "\\;")
+        .replace(/,/g, "\\,");
     }
 
     function generateContactCode(values) {
       const { firstName, lastName } = splitFullName(values.name);
-      const fields = [
-        `N:${escapeMeCardValue(lastName)},${escapeMeCardValue(firstName)};`
-      ];
-
       const phone = normalizePhone(values.phone);
       const mobile = normalizePhone(values.mobile);
+      const website = values.website
+        ? "https://" + values.website.replace(/^https?:\/\//, "")
+        : "";
 
-      if (phone) fields.push(`TEL:${phone};`);
-      if (mobile) fields.push(`TEL:${mobile};`);
-      if (values.email) fields.push(`EMAIL:${escapeMeCardValue(values.email)};`);
-      if (values.website) {
-        const website = "https://" + values.website.replace(/^https?:\/\//, "");
-        fields.push(`URL:${escapeMeCardValue(website)};`);
+      // vCard 3.0 explicitement encodée en UTF-8 : meilleure compatibilité
+      // avec les accents, apostrophes, cédilles et autres caractères spéciaux.
+      const lines = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N;CHARSET=UTF-8:${escapeVCardText(lastName)};${escapeVCardText(firstName)};;;`,
+        `FN;CHARSET=UTF-8:${escapeVCardText(values.name)}`,
+        "ORG;CHARSET=UTF-8:Ville du Lamentin"
+      ];
+
+      if (values.job) {
+        lines.push(`TITLE;CHARSET=UTF-8:${escapeVCardText(values.job)}`);
+      }
+      if (phone) {
+        lines.push(`TEL;TYPE=WORK,VOICE:${phone}`);
+      }
+      if (mobile) {
+        lines.push(`TEL;TYPE=CELL,VOICE:${mobile}`);
+      }
+      if (values.email) {
+        lines.push(`EMAIL;TYPE=INTERNET,WORK:${escapeVCardText(values.email)}`);
+      }
+      if (website) {
+        lines.push(`URL:${escapeVCardText(website)}`);
       }
 
-      fields.push(`ORG:${escapeMeCardValue("Ville du Lamentin")};`);
-      if (values.job) fields.push(`NOTE:${escapeMeCardValue(values.job)};`);
+      lines.push("END:VCARD");
 
-      // Le dernier point-virgule ferme la structure MECARD.
-      return "MECARD:" + fields.join("") + ";";
+      // Le format vCard exige des retours de ligne CRLF.
+      return lines.join("\r\n");
     }
 
     function setRowVisibility(rowId, visible) {
