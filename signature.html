@@ -45,22 +45,26 @@
     }
 
     #qrcode-container {
-      width: 120px;
-      min-width: 120px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
+      width: 120px !important;
+      min-width: 120px !important;
+      max-width: 120px !important;
+      height: 120px !important;
+      min-height: 120px !important;
+      max-height: 120px !important;
+      background: #ffffff;
       padding: 2px;
       border-radius: 10px;
       border: 1px solid #e5e7eb;
+      text-align: center;
+      vertical-align: middle;
+      overflow: hidden;
+      line-height: 0;
     }
     #qrcode-container img {
-      display: block;
-      width: auto;
-      height: auto;
-      max-width: 114px;
+      display: block !important;
+      margin: 0 auto !important;
+      max-width: none !important;
+      max-height: none !important;
       image-rendering: pixelated;
     }
     .toast { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #005b8f; color: #fff; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: bold; box-shadow: 0 6px 24px rgba(0,0,0,0.18); z-index: 9999; }
@@ -107,10 +111,10 @@
           </table>
          </td>
          <td style="padding:18px 22px; border:1px solid #e5e7eb; border-left:none; border-radius:0 18px 18px 0;">
-          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%; border-collapse:collapse;">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%; border-collapse:collapse; table-layout:fixed;">
            <tbody>
             <tr>
-             <td valign="top" style="padding-right:20px; vertical-align:top;">
+             <td valign="top" style="vertical-align:top; padding:0 18px 0 0;">
               <div style="font-size:20px; font-weight:700; color:#005b8f;" id="sigName">
                Léo MARÉCHAL
               </div>
@@ -121,37 +125,43 @@
                Direction Aménagement Numérique
               </div>
               <div style="height:2px; width:70px; background:#00a6a6; margin:12px 0;"></div>
-              <table cellpadding="0" cellspacing="0" style="font-size:13px; color:#374151; line-height:1.7; border-collapse:collapse;">
+              <table cellpadding="0" cellspacing="0" border="0" style="font-size:13px; color:#374151; line-height:1.7; border-collapse:collapse;">
                <tbody>
                 <tr>
-                 <td style="padding-right:8px; vertical-align:top;">☎</td>
+                 <td style="padding-right:8px;">☎</td>
                  <td id="sigPhone">0590 00 00 00</td>
                 </tr>
                 <tr id="extensionRow">
-                 <td style="padding-right:8px; vertical-align:top;">📞</td>
+                 <td style="padding-right:8px;">📞</td>
                  <td id="sigExtension">1234</td>
                 </tr>
                 <tr id="mobileRow">
-                 <td style="padding-right:8px; vertical-align:top;">📱</td>
+                 <td style="padding-right:8px;">📱</td>
                  <td id="sigMobile">0690 00 00 00</td>
                 </tr>
                 <tr>
-                 <td style="padding-right:8px; vertical-align:top;">✉</td>
+                 <td style="padding-right:8px;">✉</td>
                  <td><a href="mailto:prenom.nom@ville-lamentin.fr" id="sigEmail" style="color:#005b8f; text-decoration:none;">prenom.nom@ville-lamentin.fr</a></td>
                 </tr>
                 <tr>
-                 <td style="padding-right:8px; vertical-align:top;">🌐</td>
+                 <td style="padding-right:8px;">🌐</td>
                  <td><a href="https://www.ville-lamentin.fr" target="_blank" rel="noopener noreferrer" style="color:#005b8f; text-decoration:none;">www.ville-lamentin.fr</a></td>
                 </tr>
                </tbody>
               </table>
-              <div data-template-id="sig-pill" class="canva-text" style="margin-top: 12px; padding: 8px 12px; background: rgb(240, 249, 255); border-radius: 20px; display: inline-block; font-size: 12px; color: rgb(0, 91, 143); font-weight: 700; font-style: normal;">Ville du Lamentin · Guadeloupe</div>
+              <div data-template-id="sig-pill" class="canva-text" style="margin-top:12px; padding:8px 12px; background:#f0f9ff; border-radius:20px; display:inline-block; font-size:12px; color:#005b8f; font-weight:700;">Ville du Lamentin · Guadeloupe</div>
              </td>
-             <td valign="top" width="128" style="width:128px; min-width:128px; vertical-align:top; text-align:center;">
-              <div style="font-size:11px; color:#6b7280; font-weight:600; text-align:center; line-height:1.35;">
+             <td width="128" valign="top" align="center" style="width:128px; min-width:128px; max-width:128px; vertical-align:top; text-align:center; padding:0;">
+              <div style="font-size:11px; line-height:14px; color:#6b7280; font-weight:600; text-align:center; margin:0 0 6px 0;">
                Scannez pour enregistrer le contact
               </div>
-              <div id="qrcode-container" aria-label="QR code de la fiche contact" style="width:120px; min-width:120px; height:120px; min-height:120px; background:#ffffff; padding:3px; border-radius:10px; border:1px solid #e5e7eb; margin:6px auto 0; text-align:center; display:flex; align-items:center; justify-content:center;"></div>
+              <table cellpadding="0" cellspacing="0" border="0" width="120" height="120" align="center" style="width:120px; min-width:120px; max-width:120px; height:120px; border-collapse:separate; margin:0 auto;">
+               <tbody>
+                <tr>
+                 <td id="qrcode-container" width="120" height="120" align="center" valign="middle" aria-label="QR code de la fiche contact" style="width:120px; min-width:120px; max-width:120px; height:120px; min-height:120px; max-height:120px; background:#ffffff; padding:2px; border:1px solid #e5e7eb; border-radius:10px; text-align:center; vertical-align:middle; overflow:hidden; line-height:0;"></td>
+                </tr>
+               </tbody>
+              </table>
              </td>
             </tr>
            </tbody>
@@ -331,22 +341,16 @@
       finalImage.src = canvas.toDataURL("image/png");
       finalImage.width = finalSize;
       finalImage.height = finalSize;
+      finalImage.setAttribute("width", String(finalSize));
+      finalImage.setAttribute("height", String(finalSize));
+      finalImage.setAttribute("border", "0");
       finalImage.alt = "QR code contenant les coordonnées de l’agent";
       finalImage.setAttribute("draggable", "false");
-      finalImage.setAttribute("border", "0");
-      finalImage.style.display = "block";
-      finalImage.style.width = finalSize + "px";
-      finalImage.style.height = finalSize + "px";
-      finalImage.style.minWidth = finalSize + "px";
-      finalImage.style.minHeight = finalSize + "px";
-      finalImage.style.maxWidth = finalSize + "px";
-      finalImage.style.maxHeight = finalSize + "px";
-      finalImage.style.margin = "0 auto";
-      finalImage.style.border = "0";
-      finalImage.style.outline = "none";
-      finalImage.style.textDecoration = "none";
-      finalImage.style.imageRendering = "pixelated";
-      finalImage.style.verticalAlign = "top";
+      finalImage.style.cssText =
+        `display:block; width:${finalSize}px; height:${finalSize}px; ` +
+        `min-width:${finalSize}px; max-width:${finalSize}px; ` +
+        `min-height:${finalSize}px; max-height:${finalSize}px; ` +
+        "margin:0 auto; border:0; line-height:0; image-rendering:pixelated;";
 
       return finalImage;
     }
@@ -354,14 +358,6 @@
     function updateQRCode() {
       const container = document.getElementById("qrcode-container");
       container.innerHTML = "";
-      container.style.width = "120px";
-      container.style.minWidth = "120px";
-      container.style.height = "120px";
-      container.style.minHeight = "120px";
-      container.style.padding = "3px";
-      container.style.display = "flex";
-      container.style.alignItems = "center";
-      container.style.justifyContent = "center";
 
       if (typeof QRCode === "undefined") {
         container.textContent = "QR code indisponible";
@@ -422,51 +418,71 @@
       updateQRCode();
     });
 
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3500);
-    }
+    function copySignature() {
+      const signature = document.getElementById("signature");
+      const qrImage = signature.querySelector("#qrcode-container img");
 
-    async function copySignature() {
-      const sig = document.getElementById("signature");
-      const html = sig.outerHTML;
-      const text = sig.innerText.replace(/
-{3,}/g, "
-
-").trim();
-
-      if (navigator.clipboard && window.ClipboardItem) {
-        try {
-          const item = new ClipboardItem({
-            "text/html": new Blob([html], { type: "text/html" }),
-            "text/plain": new Blob([text], { type: "text/plain" })
-          });
-
-          await navigator.clipboard.write([item]);
-          showToast("Signature copiée ! Collez-la dans Gmail (Ctrl+V / Cmd+V).");
-          return;
-        } catch (error) {
-          console.warn("Copie HTML moderne impossible, utilisation du mode de secours.", error);
-        }
+      if (!qrImage || !qrImage.complete) {
+        updateQRCode();
       }
 
+      // Copie une version isolée de la signature afin que Gmail ne récupère
+      // ni la grille de la page ni les règles flex susceptibles d'étirer le QR.
+      const copyArea = document.createElement("div");
+      copyArea.setAttribute("aria-hidden", "true");
+      copyArea.style.cssText =
+        "position:fixed; left:-10000px; top:0; width:650px; " +
+        "background:#ffffff; overflow:visible;";
+
+      const clone = signature.cloneNode(true);
+      clone.removeAttribute("id");
+      clone.style.cssText = "width:650px; min-width:650px; max-width:650px; background:#ffffff;";
+
+      clone.querySelectorAll("[id]").forEach(element => {
+        element.removeAttribute("id");
+      });
+
+      const clonedQr = clone.querySelector('img[alt="QR code contenant les coordonnées de l’agent"]');
+      if (clonedQr) {
+        const fixedWidth = clonedQr.getAttribute("width") || "110";
+        const fixedHeight = clonedQr.getAttribute("height") || fixedWidth;
+        clonedQr.setAttribute("width", fixedWidth);
+        clonedQr.setAttribute("height", fixedHeight);
+        clonedQr.setAttribute("border", "0");
+        clonedQr.style.cssText =
+          `display:block; width:${fixedWidth}px; height:${fixedHeight}px; ` +
+          `min-width:${fixedWidth}px; max-width:${fixedWidth}px; ` +
+          `min-height:${fixedHeight}px; max-height:${fixedHeight}px; ` +
+          "margin:0 auto; border:0; line-height:0;";
+      }
+
+      copyArea.appendChild(clone);
+      document.body.appendChild(copyArea);
+
       const range = document.createRange();
-      range.selectNode(sig);
+      range.selectNodeContents(copyArea);
 
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
 
-      const copied = document.execCommand("copy");
-      sel.removeAllRanges();
+      let copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch (error) {
+        console.error(error);
+      }
 
-      showToast(
-        copied
-          ? "Signature copiée ! Collez-la dans Gmail (Ctrl+V / Cmd+V)."
-          : "La copie automatique a échoué. Sélectionnez la signature puis copiez-la manuellement."
-      );
+      selection.removeAllRanges();
+      copyArea.remove();
+
+      const toast = document.getElementById("toast");
+      toast.textContent = copied
+        ? "Signature copiée ! Le QR code gardera ses proportions dans Gmail."
+        : "La copie automatique a échoué. Sélectionnez la signature puis copiez-la manuellement.";
+
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
     }
   </script>
   
